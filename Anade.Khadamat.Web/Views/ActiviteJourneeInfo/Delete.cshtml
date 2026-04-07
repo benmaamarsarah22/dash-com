@@ -1,0 +1,44 @@
+﻿@model Anade.Khadamat.Domain.Entity.ActiviteJourneeInfo
+
+@{
+    ViewData["Title"] = "حذف الأيام الإعلامية والأبواب المفتوحة";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="alert alert-warning">
+    <p>هل أنت متأكد أنك تريد حذف هذه اليوم الإعلامي؟</p>
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <th>موضوع النشاط</th>
+        <td>@Model.Activite?.Sujet</td>
+    </tr>
+    <tr>
+        <th>مكان النشاط</th>
+        <td>@Model.Activite?.Lieu</td>
+    </tr>
+    <tr>
+        <th>التاريخ</th>
+        <td>@Model.Activite?.DateActivite.ToString("dd/MM/yyyy")</td>
+    </tr>
+    <tr>
+        <th>المنظمين</th>
+        <td>@Model.Activite?.Organisateurs</td>
+    </tr>
+    <tr>
+        <th>المشاركين</th>
+        <td>@Model.Activite?.Participants</td>
+    </tr>
+    <tr>
+        <th>عدد الزوار</th>
+        <td>@Model.Activite?.NombreVisiteurs</td>
+    </tr>
+</table>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn btn-danger">حذف</button>
+    <a asp-action="Index" class="btn btn-secondary">إلغاء</a>
+</form>

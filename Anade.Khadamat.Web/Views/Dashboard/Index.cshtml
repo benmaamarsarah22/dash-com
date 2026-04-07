@@ -1,0 +1,191 @@
+﻿@model Anade.Khadamat.Web.ViewModels.DashboardFilterVM
+
+@{
+    ViewData["Title"] = "Dashboard Activités";
+ 
+    var moisListe = new[]
+    {
+        new { Valeur = 1, Nom = "جانفي" },
+        new { Valeur = 2, Nom = "فيفري" },
+        new { Valeur = 3, Nom = "مارس" },
+        new { Valeur = 4, Nom = "أفريل" },
+        new { Valeur = 5, Nom = "ماي" },
+        new { Valeur = 6, Nom = "جوان" },
+        new { Valeur = 7, Nom = "جويلية" },
+        new { Valeur = 8, Nom = "أوت" },
+        new { Valeur = 9, Nom = "سبتمبر" },
+        new { Valeur = 10, Nom = "أكتوبر" },
+        new { Valeur = 11, Nom = "نوفمبر" },
+        new { Valeur = 12, Nom = "ديسمبر" },
+    };
+    
+}
+@section head {
+    <partial name="_datatables.style" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+}
+
+
+<h2 class="mb-4">📊 حصيلة نشاطات الإتصال للوكالات الولائية </h2>
+
+<form method="get" class="row mb-3">
+    <div class="col-md-3">
+        <select name="mois" class="form-control">
+            <option value="">--  الشهر  --</option>
+            @foreach (var m in moisListe)
+            {
+                if (Model.Mois == m.Valeur)
+                {
+                    <option value="@m.Valeur" selected>@m.Nom</option>
+                }
+                else
+                {
+                    <option value="@m.Valeur">@m.Nom</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <select name="annee" class="form-control">
+            @for (int i = 2026; i <= 2035; i++)
+            {
+                if (Model.Annee == i)
+                {
+                    <option value="@i" selected>@i</option>
+                }
+                else
+                {
+                    <option value="@i">@i</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-primary">تصفية </button>
+    </div>
+</form>
+
+<table id="dashboardTable"  class="table table-bordered table-striped text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>الولاية</th>
+            <th>الوكالة الولائية</th>
+            <th>أيام إعلامية وأبواب مفتوحة</th>
+            <th>معارض وصالونات</th>
+            <th>أيام دراسية وملتقيات Forum</th>
+            <th>جلسات تنسيقية خارجية/إتفاقيات</th>
+            <th>تغطيات إذاعية</th>
+            <th>تغطيات تلفزيونبة</th>
+            <th>صحافة مكتوبة/إلكترونية</th>
+            <th>المجموع</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.Data)
+        {
+            <tr class="@(item.Total == 0 ? "table-secondary" : "")">
+                <td>@item.StructureCode</td>
+                <td>@item.StructureDesignation</td>
+                <td>@item.JourneeInfoCount</td>
+                <td>@item.SalonCount</td>
+                <td>@item.ForumCount</td>
+                <td>@item.ReunionCount</td>
+                <td>@item.RadioCount</td>
+                <td>@item.TVCount</td>
+                <td>@item.PresseCount</td>
+                <td class="fw-bold">@item.Total</td>
+            </tr>
+        }
+    </tbody>
+
+    <tfoot class="table-dark">
+        <tr>
+            <th colspan="2">الإجمالي</th>
+            <th>@Model.Data.Sum(x => x.JourneeInfoCount)</th>
+            <th>@Model.Data.Sum(x => x.SalonCount)</th>
+            <th>@Model.Data.Sum(x => x.ForumCount)</th>
+            <th>@Model.Data.Sum(x => x.ReunionCount)</th>
+            <th>@Model.Data.Sum(x => x.RadioCount)</th>
+            <th>@Model.Data.Sum(x => x.TVCount)</th>
+            <th>@Model.Data.Sum(x => x.PresseCount)</th>
+            <th>@Model.Data.Sum(x => x.Total)</th>
+        </tr>
+    </tfoot>
+
+
+
+</table>
+
+@section Scripts {
+    <partial name="_datatables.script" />
+ 
+
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        var mois = '@Html.Raw(moisListe.FirstOrDefault(m => m.Valeur == Model.Mois)?.Nom)';
+        var annee = '@Model.Annee';
+
+        var titreExcel = 'حصيلة نشاطات الإتصال للوكالات الولائية - '
+                        + (mois ? mois : 'كل الأشهر') + ' ' + annee;
+
+        $('#dashboardTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "order": [],
+
+                "dom": 'Blfrtip',
+                 buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '📥 تصدير إلى Excel',
+
+                            title: null,  
+
+                            messageTop: titreExcel,  
+
+                                filename: 'حصيلة نشاطات الإتصال للوكالات الولائية_' + (mois || 'Tous') + '_' + annee,
+
+                            exportOptions: {
+                                columns: ':visible'
+                            },
+
+                            customize: function (xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                                
+                                $('row:first c', sheet).attr('s', '2');
+                                 
+                                $('worksheet', sheet).attr('rightToLeft', '1');
+                            }
+                        }
+                    ],
+
+
+            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "الكل"]],
+
+            "language": {
+                "sSearch": "🔍 بحث:",
+                "sLengthMenu": "إظهار _MENU_ ولاية",
+                "sInfo": "عرض _START_ إلى _END_ من أصل _TOTAL_",
+                "sZeroRecords": "لا توجد نتائج",
+                "sEmptyTable": "لا توجد بيانات",
+                "oPaginate": {
+                    "sNext": "التالي",
+                    "sPrevious": "السابق"
+                }
+            }
+        });
+
+    });
+</script>
+} 

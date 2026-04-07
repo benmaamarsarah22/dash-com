@@ -1,0 +1,75 @@
+﻿@model Anade.Khadamat.Domain.Entity.ActiviteSalon
+
+@{
+    ViewData["Title"] = "تفاصيل صالون أو معرض";
+}
+
+<div class="container mt-4" dir="rtl">
+
+    <div class="card shadow border-0 rounded-4">
+
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center rounded-top-4">
+            <h4 class="mb-0">📄 تفاصيل صالون أو معرض</h4>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light">
+                        <strong>📌 موضوع النشاط</strong>
+                        <div>@Model.Activite.Sujet</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light">
+                        <strong>📍 المكان</strong>
+                        <div>@Model.Activite.Lieu</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light">
+                        <strong>📅 التاريخ</strong>
+                        <div>@Model.Activite.DateActivite.ToString("dd/MM/yyyy")</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light">
+                        <strong>👥 المنظمون</strong>
+                        <div>@Model.Activite.Organisateurs</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light">
+                        <strong>🙋 المشاركون</strong>
+                        <div>@Model.Activite.Participants</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light">
+                        <strong>📊 عدد الزوار</strong>
+                        <div>@Model.Activite.NombreVisiteurs</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Button -->
+            <div class="text-start mt-4">
+                <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                    ⬅ رجوع
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>

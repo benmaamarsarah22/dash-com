@@ -1,0 +1,49 @@
+﻿<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+     
+    <a asp-controller="Home" asp-action="Index" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+        <h2 class="m-0 text-primary">
+            <i class="fa fa-sticky-note me-3"></i>DHASH-COM
+        </h2>
+    </a>
+
+ 
+    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+     
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+
+        <div class="navbar-nav ms-auto p-4 p-lg-0">
+
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                    الأنشطة
+                </a>
+                <div class="dropdown-menu m-0">
+                    <a asp-controller="ActiviteJourneeInfo" asp-action="Index" class="dropdown-item">أيام إعلامية وأبواب مفتوحة</a>
+                    <a asp-controller="ActiviteForum" asp-action="Index" class="dropdown-item">أيام دراسية وملتقيات</a>
+                    <a asp-controller="ActivitePresse" asp-action="Index" class="dropdown-item">صحافة مكتوبة/إلكترونية</a>
+                    <a asp-controller="ActiviteRadio" asp-action="Index" class="dropdown-item">تغطيات إذاعية</a>
+                    <a asp-controller="ActiviteReunionExterne" asp-action="Index" class="dropdown-item">جلسات تنسيقية خارجية/اتفاقيات</a>
+                    <a asp-controller="ActiviteSalon" asp-action="Index" class="dropdown-item">معارض وصالونات</a>
+                    <a asp-controller="ActiviteTelevision" asp-action="Index" class="dropdown-item">تغطيات تلفزيونية</a>
+                </div>
+            </div>
+
+        </div>
+
+         
+        </div>
+
+        <div class="navbar-nav mx-auto">
+        <a asp-controller="MoisCloture" asp-action="Index1" class="nav-item nav-link text-center">
+ EXERCICE 
+        </a>
+    </div>
+        <div class="d-flex align-items-center pe-4">
+            <partial name="_LoginPartial" />
+        </div>
+
+    </div>
+
+</nav>

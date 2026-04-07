@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Anade.Khadamat.Domain.Entity.ActiviteRadio>
+
+@{
+    ViewData["Title"] = "Liste des emissions radiophonique";
+}
+
+@section head {
+    <partial name="_datatables.style" />
+}
+
+<div class="card shadow-lg border-0 p-4">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h3 class="mb-0 text-white">📋قائمة التغطيات الإذاعية</h3>
+        <a asp-controller="ActiviteRadio" asp-action="Create" class="btn btn-success shadow-sm fw-semibold px-4 py-2 d-flex align-items-center rounded-pill">
+            <i class="bi bi-plus-circle me-2 fs-5"></i> إضافة
+        </a>
+    </div>
+
+    <div class="card-body">
+        <partial name="_Message" />
+
+        <div class="table-responsive overflow-hidden overflow-lg-auto mt-3">
+            <table class="table table-hover table-striped align-middle table-bordered shadow-sm rounded-3" id="myTable">
+                <thead class="text-white" style="background-color: var(--bs-primary);">
+                    <tr>
+                        <th>Id</th>
+                        <th>المحطة الإذاعية</th>
+                        <th>المتدخلين</th>
+                        <th>الموضوع</th>
+                        <th>التاريخ</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider"> 
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_datatables.script" />
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                processing: true,
+                serverSide: true,
+                order: [[0, "desc"]],
+                lengthMenu: [[10, 20, 50, 9999], [10, 20, 50, "All"]],
+                ajax: {
+                    url: "/ActiviteRadio/RadioDataTable",
+                    type: "POST"
+                },
+                columns: [
+                    { data: "id", visible: false, searchable: false },
+                    { data: "stationRadio" },
+                    { data: "intervenants" },
+                    { data: "activite.sujet" },
+                    {
+                        data: "activite.dateActivite",
+                        render: function(data) { return moment(data).format('DD/MM/YYYY'); }
+                    },
+
+                    {
+                        data: "id",
+                        sortable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return `
+                                <div class="d-flex gap-2">
+                                    <a href="/ActiviteRadio/Details/${row.id}"  class="btn btn-outline-info btn-sm" title="Détails">
+                                       <i class="bi bi-eye-fill"></i>
+                                   </a>
+
+                                    <a href="/ActiviteRadio/Edit/${row.id}" class="btn btn-outline-secondary btn-sm" title="Éditer">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="/ActiviteRadio/Delete/${row.id}" class="btn btn-outline-danger btn-sm" title="Supprimer">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </div>
+                            `;
+                        }
+                    }
+                ],
+               language: {
+                 sProcessing: "جارٍ المعالجة...",
+                 sSearch: "بحث&nbsp;:",
+                 sLengthMenu: "عرض _MENU_ عنصر",
+                 sInfo: "عرض العنصر _START_ إلى _END_ من أصل _TOTAL_ عنصر",
+                 sInfoEmpty: "عرض العنصر 0 إلى 0 من أصل 0 عنصر",
+                 sInfoFiltered: "(تم التصفية من أصل _MAX_ عنصر)",
+                 sLoadingRecords: "جارٍ التحميل...",
+                 sZeroRecords: "لم يتم العثور على عناصر مطابقة",
+                 sEmptyTable: "لا توجد بيانات متاحة في الجدول",
+                 oPaginate: {
+                     sFirst: "الأول",
+                     sPrevious: "السابق",
+                     sNext: "التالي",
+                     sLast: "الأخير"
+            }
+        },
+
+                    dom: 'Blfrtip',
+
+        buttons: [
+        {
+            extend: 'excelHtml5',
+            text: 'تصدير إلى Excel',
+            title: 'قائمة_أنشطة_اليوم',
+            className: 'btn btn-success',
+            autoFilter: true,
+
+
+            exportOptions: {
+                columns: [1, 2, 3, 4, 5]
+            }
+        }
+        ],
+            });
+
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

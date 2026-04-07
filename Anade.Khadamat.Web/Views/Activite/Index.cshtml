@@ -1,0 +1,173 @@
+﻿@* @model IEnumerable<Anade.Khadamat.Domain.Entity.Activite>
+
+@{
+    ViewData["Title"] = "Liste des activités";
+}
+
+<h2 class="mb-3">Liste globale des activités</h2>
+
+@section head {
+    <partial name="_datatables.style" />
+}
+
+<button type="button" class="btn btn-primary mb-3"
+        data-bs-toggle="modal"
+        data-bs-target="#choixActiviteModal">
+    ➕ Ajouter une activité
+</button>
+
+<table class="table table-bordered table-striped" id="matable">
+    <thead class="table-dark">
+        <tr>
+            <th>Id</th>
+            <th>Wilaya</th>
+            <th>Agence</th>
+            <th>Type activité</th>
+            <th>Titre</th>
+            <th>Date</th>
+            <th style="width:140px">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.Id</td>
+                <td>@a.Wilaya?.DesignationFr</td>
+                <td>@a.AgenceWilaya?.DesignationFr</td>
+                <td>@a.TypeActivite?.DesignationFr</td>
+                <td>@a.Titre</td>
+                <td>@a.DateActivite.ToString("dd/MM/yyyy")</td>
+                <td class="text-center">
+                    <a class="btn btn-outline-info btn-sm"
+                       asp-action="Details"
+                       asp-route-id="@a.Id">👁</a>
+
+                    <a class="btn btn-outline-warning btn-sm"
+                       asp-action="EditRedirect"
+                       asp-route-id="@a.Id"
+                       asp-route-typeId="@a.TypeActivite?.Id">✏️</a>
+
+                    <a class="btn btn-outline-danger btn-sm"
+                       asp-action="DeleteRedirect"
+                       asp-route-id="@a.Id"
+                       asp-route-typeId="@a.TypeActivite?.Id"
+                       onclick="return confirm('Supprimer cette activité ?');">🗑</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- MODALE -->
+<div class="modal fade" id="choixActiviteModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Nouvelle activité</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="mb-3">
+                    <label>Wilaya</label>
+                    <select id="wilayaSelect" class="form-select">
+                        <option value="">-- Sélectionnez --</option>
+                        @foreach (var w in ViewBag.Wilayas)
+                        {
+                            <option value="@w.Id">@w.DesignationFr</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Agence</label>
+                    <select id="agenceSelect" class="form-select">
+                        <option value="">-- Sélectionnez --</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Type activité</label>
+                    <select id="typeActiviteSelect" class="form-select">
+                        <option value="">-- Sélectionnez --</option>
+                        @foreach (var t in ViewBag.Types)
+                        {
+                            <option value="@t.Id">@t.DesignationFr</option>
+                        }
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button class="btn btn-success" id="btnSuivantActivite">
+                    Suivant ➡
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_datatables.script" />
+
+    <script>
+        $(document).ready(function () {
+
+            $('#matable').DataTable({
+                order: [[0, "desc"]],
+                language: {
+                    sSearch: "Rechercher :",
+                    sLengthMenu: "Afficher _MENU_ éléments",
+                    sInfo: "Affichage de _START_ à _END_ sur _TOTAL_",
+                    sZeroRecords: "Aucun résultat",
+                    sEmptyTable: "Aucune donnée"
+                }
+            });
+
+            $('#wilayaSelect').change(function () {
+                let wilayaId = $(this).val();
+                $('#agenceSelect').html('<option>Chargement...</option>');
+
+                if (wilayaId) {
+                    $.get('/Activite/GetAgencesByWilaya', { wilayaId }, function (data) {
+                        let html = '<option value="">-- Sélectionnez --</option>';
+                        data.forEach(a => {
+                            html += `<option value="${a.id}">${a.designationFr}</option>`;
+                        });
+                        $('#agenceSelect').html(html);
+                    });
+                }
+            });
+
+                    $('#btnSuivantActivite').click(function () {
+
+            let wilayaId = $('#wilayaSelect').val();
+            let agenceId = $('#agenceSelect').val();
+            let typeId = $('#typeActiviteSelect').val();
+
+            if (!wilayaId || !agenceId || !typeId) {
+                alert("Veuillez tout sélectionner.");
+                return;
+            }
+
+            const routes = {
+                1: `/ActiviteJourneeInfo/Create?wilayaId=${wilayaId}&agenceId=${agenceId}`;
+                2: "/ActiviteSalon/Create",
+                3: "/ActiviteForum/Create",
+                4: "/ActiviteSessionCoordination/Create",
+                5: "/ActiviteRadio/Create",
+                6: "/ActiviteTelevision/Create",
+                7: "/ActivitePresse/Create"
+            };
+
+            window.location.href = routes[typeId];
+        });
+        });
+    </script>
+} *@

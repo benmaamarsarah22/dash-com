@@ -1,0 +1,38 @@
+﻿@model Anade.Khadamat.Domain.Entity.ActivitePresse
+
+@{
+    ViewData["Title"] = "حذف الصحافة المكتوبة/الإلكترونية";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="alert alert-warning">
+    <p>هل أنت متأكد أنك تريد حذف هذا المقال الصحفي المكتوب  اوالإلكتروني؟</p>
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <th>الصحيفة / الموقع الإلكتروني</th>
+        <td>@Model.Media</td>
+    </tr>
+
+   
+    <tr>
+        <th>الموضوع</th>
+        <td>@Model.Activite?.Sujet</td>
+    </tr>
+     
+    <tr>
+        <th>التاريخ</th>
+        <td>@Model.Activite?.DateActivite.ToString("dd/MM/yyyy")</td>
+    </tr>
+    
+    
+     
+</table>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn btn-danger">حذف</button>
+    <a asp-action="Index" class="btn btn-secondary">إلغاء</a>
+</form>

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Anade.Business.Core\Anade.Business.Core.csproj" />
+    <ProjectReference Include="..\Anade.Data.Abstractions\Anade.Data.Abstractions.csproj" />
+    <ProjectReference Include="..\Anade.Domain.Core\Anade.Domain.Core.csproj" />
+    <ProjectReference Include="..\Anade.Khadamat.Data\Anade.Khadamat.Data.csproj" />
+    <ProjectReference Include="..\Anade.Khadamat.Domain\Anade.Khadamat.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

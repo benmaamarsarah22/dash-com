@@ -1,0 +1,42 @@
+﻿@model Anade.Khadamat.Web.ViewModels.ActiviteRadioVM
+
+@{
+    ViewData["Title"] = "تغطية إذاعية جديدة";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label asp-for="StationRadio" class="form-label"></label>
+        <input asp-for="StationRadio" class="form-control" />
+        <span asp-validation-for="StationRadio" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Intervenants" class="form-label"></label>
+        <input asp-for="Intervenants"  class="form-control" />
+        <span asp-validation-for="Intervenants" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Sujet" class="form-label"></label>
+        <input asp-for="Sujet" class="form-control" />
+        <span asp-validation-for="Sujet" class="text-danger"></span>
+    </div>
+
+   
+    <div class="mb-3">
+        <label asp-for="DateActivite" class="form-label"></label>
+        <input asp-for="DateActivite" type="date" class="form-control" />
+        <span asp-validation-for="DateActivite" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">إنشاء</button>
+    <a asp-action="Index" class="btn btn-secondary">إلغاء</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

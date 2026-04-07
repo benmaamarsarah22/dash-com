@@ -1,0 +1,137 @@
+﻿@model List<Anade.Khadamat.Domain.Entity.MoisCloture>
+
+@{
+    ViewData["Title"] = "إدارة الأشهر";
+
+    var moisListe = new[]
+    {
+        new { Valeur = 1, Nom = "جانفي" },
+        new { Valeur = 2, Nom = "فيفري" },
+        new { Valeur = 3, Nom = "مارس" },
+        new { Valeur = 4, Nom = "أفريل" },
+        new { Valeur = 5, Nom = "ماي" },
+        new { Valeur = 6, Nom = "جوان" },
+        new { Valeur = 7, Nom = "جويلية" },
+        new { Valeur = 8, Nom = "أوت" },
+        new { Valeur = 9, Nom = "سبتمبر" },
+        new { Valeur = 10, Nom = "أكتوبر" },
+        new { Valeur = 11, Nom = "نوفمبر" },
+        new { Valeur = 12, Nom = "ديسمبر" },
+    };
+}
+
+<h2 class="mb-4">📅 إدارة الأشهر (Exercices)</h2>
+
+<partial name="_Message" />
+
+<!-- STATISTIQUES -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 p-3 text-center">
+            <h5>📊 مجموع الأشهر</h5>
+            <h3>@Model.Count</h3>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 p-3 text-center">
+            <h5>🟢 الأشهر المفتوحة</h5>
+            <h3>@Model.Count(x => !x.IsCloture)</h3>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 p-3 text-center">
+            <h5>🔴 الأشهر المغلقة</h5>
+            <h3>@Model.Count(x => x.IsCloture)</h3>
+        </div>
+    </div>
+</div>
+
+<!-- BOUTON OUVRIR -->
+<div class="mb-4">
+    <form asp-action="Ouvrir" method="post" class="row g-2">
+        <div class="col-md-3">
+            <input type="number" name="annee" class="form-control" placeholder="السنة" required />
+        </div>
+
+        <div class="col-md-3">
+            <select name="mois" class="form-control" required>
+                <option value="">-- الشهر --</option>
+                @foreach (var m in moisListe)
+                {
+                    <option value="@m.Valeur">@m.Nom</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <button class="btn btn-success">➕ فتح شهر</button>
+        </div>
+    </form>
+</div>
+
+<!-- CARDS -->
+<div class="row g-3">
+    @foreach (var m in Model)
+    {
+        var moisNom = moisListe.FirstOrDefault(x => x.Valeur == m.Mois)?.Nom;
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+
+                <!-- HEADER -->
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>@moisNom @m.Annee</strong>
+
+                    @if (m.IsCloture)
+                    {
+                        <span class="badge bg-danger">🔴 مغلق</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">🟢 مفتوح</span>
+                    }
+                </div>
+
+                <!-- BODY -->
+                <div class="card-body">
+
+                    <p class="text-muted mb-3">
+                        📅 الشهر رقم: @m.Mois
+                    </p>
+
+                    <div class="d-flex gap-2">
+
+                        <!-- Clôturer -->
+                        @if (!m.IsCloture)
+                        {
+                            <form asp-action="Cloturer" method="post">
+                                <input type="hidden" name="annee" value="@m.Annee" />
+                                <input type="hidden" name="mois" value="@m.Mois" />
+
+                                <button class="btn btn-warning btn-sm">
+                                    🔒 غلق
+                                </button>
+                            </form>
+                        }
+
+                        <!-- Réouvrir DG -->
+                        @if (m.IsCloture && User.IsInRole("DG"))
+                        {
+                            <form asp-action="Reouvrir" method="post">
+                                <input type="hidden" name="id" value="@m.Id" />
+
+                                <button class="btn btn-danger btn-sm">
+                                    🔓 إعادة فتح
+                                </button>
+                            </form>
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>

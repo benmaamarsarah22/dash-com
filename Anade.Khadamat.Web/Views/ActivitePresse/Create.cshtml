@@ -1,0 +1,36 @@
+﻿@model Anade.Khadamat.Web.ViewModels.ActivitePresseVM
+
+@{
+    ViewData["Title"] = "صحافة مكتوبة/إلكترونية جديدة";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label asp-for="Media" class="form-label"></label>
+        <input asp-for="Media" class="form-control" />
+        <span asp-validation-for="Media" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Sujet" class="form-label"></label>
+        <input asp-for="Sujet" class="form-control" />
+        <span asp-validation-for="Sujet" class="text-danger"></span>
+    </div>
+
+   
+    <div class="mb-3">
+        <label asp-for="DateActivite" class="form-label"></label>
+        <input asp-for="DateActivite" type="date" class="form-control" />
+        <span asp-validation-for="DateActivite" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">إنشاء</button>
+    <a asp-action="Index" class="btn btn-secondary">إلغاء</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
