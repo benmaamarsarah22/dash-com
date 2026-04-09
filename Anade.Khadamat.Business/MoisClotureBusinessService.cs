@@ -2,127 +2,178 @@
 using Anade.Data.Abstractions;
 using Anade.Khadamat.Domain.Entity;
 using System;
-using System.Linq;
+using System.Linq.Expressions;
 
-public class MoisClotureBusinessService : GenericBusinessService<MoisCloture, int>
+namespace Anade.Khadamat.Business
 {
-    public MoisClotureBusinessService(IUnitOfWork unitOfWork) : base(unitOfWork) { }
-
-    //   Vérifier existence mois
-    public bool ExisteMois(int annee, int mois)
+    public class MoisClotureBusinessService : GenericBusinessService<MoisCloture, int>
     {
-        return _repository.GetSingle(x => x.Annee == annee && x.Mois == mois) != null;
-    }
+        public MoisClotureBusinessService(IUnitOfWork unitOfWork) : base(unitOfWork) { }
 
-    //   Vérifier si mois clôturé
-    public bool EstCloture(int annee, int mois)
-    {
-     
-        return _repository.GetSingle(x => x.Annee == annee && x.Mois == mois && x.IsCloture) != null;
-    }
+        // ── Query helpers ─────────────────────────────────────────────────────────
 
-    //  OUVERTURE MANUELLE DU MOIS
-    public void OuvrirMois(int annee, int mois, string userId)
-    {
-        var date = new DateTime(annee, mois, 1);
-        var moisPrecedent = date.AddMonths(-1);
-
-        var precedent = _repository.GetSingle(x =>
-            x.Annee == moisPrecedent.Year &&
-            x.Mois == moisPrecedent.Month);
-
-        //  CAS 1 : premier mois
-        bool premierMois = precedent == null;
-
-        //   CAS 2 : mois précédent non clôturé
-        if (!premierMois && !precedent.IsCloture)
+        /// <summary>Returns true when the month row exists AND is flagged as closed.</summary>
+        public bool EstCloture(int annee, int mois)
         {
-            throw new BusinessException("⛔ يجب غلق الشهر السابق قبل فتح شهر جديد");
+            var row = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
+            return row != null && row.IsCloture;
         }
 
-        //  Déjà ouvert
-        if (ExisteMois(annee, mois))
+        /// <summary>
+        /// Call this from sub-entity lifecycle hooks to block CUD operations.
+        /// </summary>
+        public void AssertMoisOuvert(int annee, int mois)
         {
-            throw new BusinessException("⛔ الشهر مفتوح بالفعل");
+            var row = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
+
+            if (row == null || row.IsCloture)
+                throw new BusinessException(
+                    $"Le mois {new DateTime(annee, mois, 1):MMMM yyyy} est clôturé. Aucune modification n'est permise.");
         }
 
-        //  Création du mois (OUVERT)
-        _repository.Add(new MoisCloture
+        // ── Ouvrir ───────────────────────────────────────────────────────────────
+
+        public BusinessResult OuvrirMois(int annee, int mois, string userId)
         {
-            Annee = annee,
-            Mois = mois,
-            IsCloture = false,
-            DateCloture = null,
-            CloturePar = null,
-        });
+            try
+            {
+                // Guard: month already exists
+                var existing = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
+                if (existing != null)
+                    throw new BusinessException("Ce mois est déjà créé. Vous ne pouvez pas le rouvrir via cette action (utilisez Réouvrir).");
 
-        _unitOfWork.SaveChanges();
-    }
+                // Ensure previous month is closed (skip for the very first row)
+                var hasPrevious = _repository.Count() > 0;
+                if (hasPrevious)
+                {
+                    var prevDate = new DateTime(annee, mois, 1).AddMonths(-1);
+                    var prev = _repository.GetSingle(x => x.Annee == prevDate.Year && x.Mois == prevDate.Month);
 
-    // ✅ 🔥 CLÔTURE MANUELLE
-    public void CloturerMois(int annee, int mois, string userId)
-    {
-        var exercice = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
+                    if (prev != null && !prev.IsCloture)
+                        throw new BusinessException("Le mois précédent doit être clôturé avant d'ouvrir un nouveau mois.");
+                }
 
-        if (exercice == null)
-        {
-            throw new BusinessException("⛔ الشهر غير موجود");
+                _repository.Add(new MoisCloture
+                {
+                    Annee = annee,
+                    Mois = mois,
+                    IsCloture = false,
+                    CloturePar = null,
+                    DateCloture = null
+                });
+
+                if (_unitOfWork.SaveChanges() == 0)
+                    throw new DataNotUpdatedException();
+
+                return BusinessResult.Success;
+            }
+            catch (BusinessException ex)
+            {
+                return BuildFailure(ex.Message);
+            }
+            catch (DataNotUpdatedException)
+            {
+                return BuildFailure("Une erreur est survenue lors de l'ouverture du mois. Veuillez réessayer.");
+            }
+            catch (Exception)
+            {
+                return BuildFailure("Une erreur inattendue est survenue.");
+            }
         }
 
-        if (exercice.IsCloture)
+        // ── Clôturer ─────────────────────────────────────────────────────────────
+
+        public BusinessResult CloturerMois(int annee, int mois, string userId)
         {
-            throw new BusinessException("⛔ الشهر مغلق بالفعل");
+            try
+            {
+                var row = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
+
+                if (row == null)
+                    throw new BusinessException("Ce mois n'a pas encore été ouvert.");
+
+                if (row.IsCloture)
+                    throw new BusinessException("Ce mois est déjà clôturé.");
+
+                row.IsCloture = true;
+                row.DateCloture = DateTime.Now;
+                row.CloturePar = userId;
+
+                _repository.Update(row);
+
+                if (_unitOfWork.SaveChanges() == 0)
+                    throw new DataNotUpdatedException();
+
+                return BusinessResult.Success;
+            }
+            catch (BusinessException ex)
+            {
+                return BuildFailure(ex.Message);
+            }
+            catch (DataNotUpdatedException)
+            {
+                return BuildFailure("Une erreur est survenue lors de la clôture du mois. Veuillez réessayer.");
+            }
+            catch (Exception)
+            {
+                return BuildFailure("Une erreur inattendue est survenue.");
+            }
         }
 
-        exercice.IsCloture = true;
-        exercice.DateCloture = DateTime.Now;
-        exercice.CloturePar = userId;
+        // ── Réouvrir (DG / Admin uniquement) ─────────────────────────────────────
 
-        _repository.Update(exercice);
-        _unitOfWork.SaveChanges();
-    }
-
-    //   REOUVERTURE (DG seulement)
-    public void ReouvrirMois(int annee, int mois, bool isDG)
-    {
-        if (!isDG)
+        public BusinessResult ReouvrirMois(int annee, int mois, string userId)
         {
-            throw new BusinessException("⛔ فقط الإدارة العامة يمكنها إعادة فتح الشهر");
+            try
+            {
+                var row = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
+
+                if (row == null)
+                    throw new BusinessException("Ce mois n'existe pas.");
+
+                if (!row.IsCloture)
+                    throw new BusinessException("Ce mois est déjà ouvert.");
+
+                row.IsCloture = false;
+                row.DateReouverture = DateTime.Now;
+                row.ReouvertPar = userId;
+
+                _repository.Update(row);
+
+                if (_unitOfWork.SaveChanges() == 0)
+                    throw new DataNotUpdatedException();
+
+                return BusinessResult.Success;
+            }
+            catch (BusinessException ex)
+            {
+                return BuildFailure(ex.Message);
+            }
+            catch (DataNotUpdatedException)
+            {
+                return BuildFailure("Une erreur est survenue lors de la réouverture du mois. Veuillez réessayer.");
+            }
+            catch (Exception)
+            {
+                return BuildFailure("Une erreur inattendue est survenue.");
+            }
         }
 
-        var exercice = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
+        // ── Private ───────────────────────────────────────────────────────────────
 
-        if (exercice == null)
+        private static BusinessResult BuildFailure(string message)
         {
-            throw new BusinessException("⛔ الشهر غير موجود");
-        }
-
-        exercice.IsCloture = false;
-        exercice.DateCloture = null;
-        exercice.CloturePar = null;
-
-        _repository.Update(exercice);
-        _unitOfWork.SaveChanges();
-    }
-
-    //   Vérifier mois ouvert (utilisé dans Activité)
-    public void VerifierMoisOuvert(DateTime date)
-    {
-        var mois = _repository.GetSingle(x => x.Annee == date.Year && x.Mois == date.Month);
-
-        if (mois == null)
-        {
-            throw new BusinessException("⛔ يجب فتح الشهر قبل إضافة نشاط");
-        }
-
-        if (mois.IsCloture)
-        {
-            throw new BusinessException("⛔ هذا الشهر مغلق");
+            var result = new BusinessResult(false);
+            result.Messages.Add(new MessageResult
+            {
+                Message = message,
+                MessageType = MessageType.Warning
+            });
+            return result;
         }
     }
 }
- 
-    
+
 
 
 

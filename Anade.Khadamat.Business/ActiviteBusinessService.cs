@@ -1,7 +1,9 @@
 ﻿using Anade.Business.Core;
 using Anade.Data.Abstractions;
+using Anade.Khadamat.Business;
 using Anade.Khadamat.Domain.Entity;
 using System;
+using System.Linq.Expressions;
 
 public class ActiviteBusinessService : GenericBusinessService<Activite, int>
 {
@@ -15,43 +17,32 @@ public class ActiviteBusinessService : GenericBusinessService<Activite, int>
         _moisService = moisService;
     }
 
-    //   AJOUT ACTIVITE
+    public override Expression<Func<Activite, object>>[] GetDefaultLoadProperties()
+    {
+        Expression<Func<Activite, object>> loadAgence = x => x.AgenceWilaya;
+        Expression<Func<Activite, object>> loadType = x => x.TypeActivite;
+        return new Expression<Func<Activite, object>>[] { loadAgence, loadType };
+    }
+
     protected override void OnAdding(Activite entity)
     {
-        //   Vérifier que le mois est OUVERT
-        _moisService.VerifierMoisOuvert(entity.DateActivite);
-
+        _moisService.AssertMoisOuvert(entity.DateActivite.Year, entity.DateActivite.Month);
         base.OnAdding(entity);
     }
 
-    //   MODIFICATION
     protected override void OnUpdating(Activite entity)
     {
-        if (_moisService.EstCloture(entity.DateActivite.Year, entity.DateActivite.Month))
-        {
-            throw new BusinessException("⛔ Impossible de modifier une activité dans un mois clôturé !");
-        }
-
+        _moisService.AssertMoisOuvert(entity.DateActivite.Year, entity.DateActivite.Month);
         base.OnUpdating(entity);
     }
 
-    //  SUPPRESSION
     protected override void OnDeleting(Activite entity)
     {
-        if (_moisService.EstCloture(entity.DateActivite.Year, entity.DateActivite.Month))
-        {
-            throw new BusinessException("⛔ Impossible de supprimer une activité dans un mois clôturé !");
-        }
-
+        _moisService.AssertMoisOuvert(entity.DateActivite.Year, entity.DateActivite.Month);
         base.OnDeleting(entity);
     }
 
-    #region helper
-
-    public bool EstMoisCloture(DateTime date)
-    {
-        return _moisService.EstCloture(date.Year, date.Month);
-    }
-
-    #endregion
+    /// <summary>Convenience helper for controllers to show a lock indicator in the UI.</summary>
+    public bool EstMoisCloture(DateTime date) =>
+        _moisService.EstCloture(date.Year, date.Month);
 }

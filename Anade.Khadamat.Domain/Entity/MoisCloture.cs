@@ -1,9 +1,7 @@
 ﻿using Anade.Domain.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Anade.Khadamat.Domain.Entity
 {
@@ -11,14 +9,27 @@ namespace Anade.Khadamat.Domain.Entity
     {
         public int Id { get; set; }
 
+        [Required]
+        [Range(2000, 2100)]
         public int Annee { get; set; }
 
-        public int Mois { get; set; } // 1 = Janvier, 12 = Décembre
+        [Required]
+        [Range(1, 12)]
+        public int Mois { get; set; }
 
         public bool IsCloture { get; set; } = false;
 
-        public DateTime? DateCloture { get; set; } // Date de clôture
+        public DateTime? DateCloture { get; set; }
 
-        public string CloturePar { get; set; } // UserId du DG par exemple
+        [StringLength(450)]
+        public string CloturePar { get; set; }
+
+        public DateTime? DateReouverture { get; set; }
+
+        [StringLength(450)]
+        public string ReouvertPar { get; set; }
+
+        [NotMapped]
+        public string MoisLabel => new DateTime(Annee, Mois, 1).ToString("MMMM yyyy");
     }
 }

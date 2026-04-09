@@ -64,7 +64,7 @@ namespace Anade.Khadamat.Web.Controllers
                 UserName = user.UserName,
                 structureCode = structure.CodeStructure,
                 structureDesignation = structure.Designation,
-                TypeActiviteId = 1,
+                TypeActiviteId = 2,
                 DateActivite = model.DateActivite,
                 Sujet = model.Sujet,
                 Lieu = model.Lieu,

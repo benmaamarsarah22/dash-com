@@ -1,0 +1,180 @@
+@model List<Anade.Khadamat.Domain.Entity.MoisCloture>
+
+@{
+    ViewData["Title"] = "إدارة الأشهر";
+    var currentYear = DateTime.Now.Year;
+    var currentMonth = DateTime.Now.Month;
+}
+
+@section head {
+    <partial name="_datatables.style" />
+}
+
+<div class="container-fluid py-4" dir="rtl">
+
+    <partial name="_Message" />
+
+    @*── فتح شهر جديد ──*@
+    <div class="card shadow border-0 rounded-4 mb-4">
+        <div class="card-header bg-success text-white d-flex align-items-center gap-2 rounded-top-4">
+            <i class="bi bi-calendar2-plus fs-5"></i>
+            <h5 class="mb-0">فتح شهر جديد</h5>
+        </div>
+        <div class="card-body">
+            <form asp-controller="MoisCloture" asp-action="Ouvrir" method="post" class="row g-3 align-items-end">
+                @Html.AntiForgeryToken()
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">السنة</label>
+                    <select name="annee" class="form-select">
+                        @for (int y = currentYear + 1; y >= currentYear - 3; y--)
+                        {
+                            <option value="@y" selected="@(y == currentYear ? "selected" : null)">@y</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">الشهر</label>
+                    <select name="mois" class="form-select">
+                        @{
+                            var monthNames = new[] { "جانفي","فيفري","مارس","أفريل","ماي","جوان","جويلية","أوت","سبتمبر","أكتوبر","نوفمبر","ديسمبر" };
+                            for (int m = 1; m <= 12; m++)
+                            {
+                                <option value="@m" selected="@(m == currentMonth ? "selected" : null)">@monthNames[m - 1]</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-success w-100 fw-semibold">
+                        <i class="bi bi-unlock-fill me-1"></i> فتح الشهر
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @*── قائمة الأشهر ──*@
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-header bg-primary text-white d-flex align-items-center gap-2 rounded-top-4">
+            <i class="bi bi-calendar3 fs-5"></i>
+            <h5 class="mb-0 text-white">قائمة الأشهر</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive mt-2">
+                <table id="moisTable" class="table table-hover table-striped align-middle table-bordered shadow-sm rounded-3">
+                    <thead class="text-white" style="background-color: var(--bs-primary);">
+                        <tr>
+                            <th>السنة</th>
+                            <th>الشهر</th>
+                            <th>الحالة</th>
+                            <th>تاريخ الغلق</th>
+                            <th>أُغلق من طرف</th>
+                            <th>تاريخ إعادة الفتح</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Annee</td>
+                                <td>@item.MoisLabel</td>
+                                <td>
+                                    @if (item.IsCloture)
+                                    {
+                                        <span class="badge bg-danger px-3 py-2 rounded-pill">
+                                            <i class="bi bi-lock-fill me-1"></i> مغلق
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success px-3 py-2 rounded-pill">
+                                            <i class="bi bi-unlock-fill me-1"></i> مفتوح
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    @(item.DateCloture.HasValue ? item.DateCloture.Value.ToString("dd/MM/yyyy HH:mm") : "—")
+                                </td>
+                                <td>@(item.CloturePar ?? "—")</td>
+                                <td>
+                                    @(item.DateReouverture.HasValue ? item.DateReouverture.Value.ToString("dd/MM/yyyy HH:mm") : "—")
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        @if (!item.IsCloture)
+                                        {
+                                            <form asp-controller="MoisCloture" asp-action="Cloturer" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="annee" value="@item.Annee" />
+                                                <input type="hidden" name="mois" value="@item.Mois" />
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                        title="غلق الشهر"
+                                                        onclick="return confirm('هل أنت متأكد من غلق شهر @item.MoisLabel؟')">
+                                                    <i class="bi bi-lock-fill"></i> غلق
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-controller="MoisCloture" asp-action="Reouvrir" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="annee" value="@item.Annee" />
+                                                <input type="hidden" name="mois" value="@item.Mois" />
+                                                <button type="submit" class="btn btn-warning btn-sm"
+                                                        title="إعادة فتح الشهر"
+                                                        onclick="return confirm('هل أنت متأكد من إعادة فتح شهر @item.MoisLabel؟')">
+                                                    <i class="bi bi-arrow-counterclockwise"></i> إعادة فتح
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_datatables.script" />
+
+    <script>
+        $(document).ready(function () {
+            $('#moisTable').DataTable({
+                order: [[0, 'desc'], [1, 'desc']],
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "الكل"]],
+                dom: 'Blfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'تصدير إلى Excel',
+                        title: 'قائمة_الأشهر',
+                        className: 'btn btn-success btn-sm',
+                        exportOptions: { columns: [0, 1, 2, 3, 4, 5] }
+                    }
+                ],
+                language: {
+                    sProcessing:   "جارٍ المعالجة...",
+                    sSearch:       "بحث&nbsp;:",
+                    sLengthMenu:   "عرض _MENU_ عنصر",
+                    sInfo:         "عرض _START_ إلى _END_ من أصل _TOTAL_ عنصر",
+                    sInfoEmpty:    "عرض 0 إلى 0 من أصل 0 عنصر",
+                    sInfoFiltered: "(تم التصفية من أصل _MAX_ عنصر)",
+                    sZeroRecords:  "لم يتم العثور على عناصر مطابقة",
+                    sEmptyTable:   "لا توجد بيانات متاحة",
+                    oPaginate: {
+                        sFirst:    "الأول",
+                        sPrevious: "السابق",
+                        sNext:     "التالي",
+                        sLast:     "الأخير"
+                    }
+                }
+            });
+        });
+    </script>
+}

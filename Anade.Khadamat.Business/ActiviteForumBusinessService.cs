@@ -1,5 +1,6 @@
 ﻿using Anade.Business.Core;
 using Anade.Data.Abstractions;
+using Anade.Khadamat.Business;
 using Anade.Khadamat.Domain.Entity;
 using System;
 using System.Linq.Expressions;
@@ -7,21 +8,44 @@ using System.Linq.Expressions;
 public class ActiviteForumBusinessService
     : GenericBusinessService<ActiviteForum, int>
 {
-    public ActiviteForumBusinessService(IUnitOfWork unitOfWork)
+    private readonly MoisClotureBusinessService _moisService;
+
+    public ActiviteForumBusinessService(
+        IUnitOfWork unitOfWork,
+        MoisClotureBusinessService moisService)
         : base(unitOfWork)
     {
-
-
-
+        _moisService = moisService;
     }
- 
 
     public override Expression<Func<ActiviteForum, object>>[] GetDefaultLoadProperties()
     {
-
-        Expression<Func<ActiviteForum, object>> loadActivity = x => x.Activite;
-
-        return new Expression<Func<ActiviteForum, object>>[] { loadActivity };
+        Expression<Func<ActiviteForum, object>> loadActivite = x => x.Activite;
+        return new Expression<Func<ActiviteForum, object>>[] { loadActivite };
     }
 
+    protected override void OnAdding(ActiviteForum entity)
+    {
+        AssertParentMoisOuvert(entity.ActiviteId);
+        base.OnAdding(entity);
+    }
+
+    protected override void OnUpdating(ActiviteForum entity)
+    {
+        AssertParentMoisOuvert(entity.ActiviteId);
+        base.OnUpdating(entity);
+    }
+
+    protected override void OnDeleting(ActiviteForum entity)
+    {
+        AssertParentMoisOuvert(entity.ActiviteId);
+        base.OnDeleting(entity);
+    }
+
+    private void AssertParentMoisOuvert(int activiteId)
+    {
+        var activite = _unitOfWork.GetRepository<Activite, int>().GetById(activiteId);
+        if (activite != null)
+            _moisService.AssertMoisOuvert(activite.DateActivite.Year, activite.DateActivite.Month);
+    }
 }
