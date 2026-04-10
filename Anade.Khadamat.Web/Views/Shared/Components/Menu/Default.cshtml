@@ -1,49 +1,326 @@
-﻿<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-     
-    <a asp-controller="Home" asp-action="Index" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-        <h2 class="m-0 text-primary">
-            <i class="fa fa-sticky-note me-3"></i>DHASH-COM
-        </h2>
-    </a>
+﻿<style>
+    /* ── Base ── */
+    #site-nav {
+        background: #fff;
+        border-bottom: 1px solid #eef0f4;
+        transition: box-shadow .25s ease;
+        padding: 0;
+        position: sticky;
+        top: 0;
+        z-index: 1080;
+    }
+    #site-nav.scrolled {
+        box-shadow: 0 4px 24px rgba(0,0,0,.07);
+    }
 
- 
-    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-     
-    <div class="collapse navbar-collapse" id="navbarCollapse">
+    /* ── Brand ── */
+    .nav-brand-wrap {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        text-decoration: none;
+        padding: 0 1.5rem;
+        height: 64px;
+    }
+    .nav-brand-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #0d6efd, #5282ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: .95rem;
+        flex-shrink: 0;
+    }
+    .nav-brand-text strong {
+        display: block;
+        font-size: .98rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        line-height: 1.1;
+    }
+    .nav-brand-text span {
+        font-size: .68rem;
+        color: #8a8fa8;
+        letter-spacing: .5px;
+    }
 
-        <div class="navbar-nav ms-auto p-4 p-lg-0">
+    /* ── Nav Links ── */
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: .1rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        height: 64px;
+    }
+    .nav-links > li > a,
+    .nav-links > li > button {
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+        height: 64px;
+        padding: 0 1rem;
+        font-size: .875rem;
+        font-weight: 600;
+        color: #444;
+        text-decoration: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+        border-bottom: 2px solid transparent;
+        transition: color .2s ease, border-color .2s ease;
+    }
+    .nav-links > li > a:hover,
+    .nav-links > li > button:hover,
+    .nav-links > li.active > a {
+        color: #0d6efd;
+        border-bottom-color: #0d6efd;
+    }
+    .nav-links > li > button .caret {
+        font-size: .65rem;
+        transition: transform .25s ease;
+        opacity: .6;
+    }
+    .nav-links > li.open > button .caret { transform: rotate(180deg); }
 
-            <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                    الأنشطة
-                </a>
-                <div class="dropdown-menu m-0">
-                    <a asp-controller="ActiviteJourneeInfo" asp-action="Index" class="dropdown-item">أيام إعلامية وأبواب مفتوحة</a>
-                    <a asp-controller="ActiviteForum" asp-action="Index" class="dropdown-item">أيام دراسية وملتقيات</a>
-                    <a asp-controller="ActivitePresse" asp-action="Index" class="dropdown-item">صحافة مكتوبة/إلكترونية</a>
-                    <a asp-controller="ActiviteRadio" asp-action="Index" class="dropdown-item">تغطيات إذاعية</a>
-                    <a asp-controller="ActiviteReunionExterne" asp-action="Index" class="dropdown-item">جلسات تنسيقية خارجية/اتفاقيات</a>
-                    <a asp-controller="ActiviteSalon" asp-action="Index" class="dropdown-item">معارض وصالونات</a>
-                    <a asp-controller="ActiviteTelevision" asp-action="Index" class="dropdown-item">تغطيات تلفزيونية</a>
-                </div>
+    /* ── Activities mega-dropdown ── */
+    .act-dropdown {
+        position: absolute;
+        top: calc(100% + 1px);
+        right: 0;
+        background: #fff;
+        border: 1px solid #eef0f4;
+        border-radius: 14px;
+        box-shadow: 0 16px 48px rgba(0,0,0,.10);
+        padding: .75rem;
+        min-width: 560px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .3rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        transition: opacity .22s ease, transform .22s ease, visibility .22s;
+        pointer-events: none;
+    }
+    .nav-links > li.open .act-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+    .act-item {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        padding: .65rem .85rem;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #333;
+        font-size: .84rem;
+        font-weight: 500;
+        transition: background .18s ease, color .18s ease;
+    }
+    .act-item:hover {
+        background: #f0f4ff;
+        color: #0d6efd;
+    }
+    .act-item:hover .act-icon { background: #0d6efd; }
+    .act-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: #eef2ff;
+        color: #0d6efd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .8rem;
+        flex-shrink: 0;
+        transition: background .18s ease, color .18s ease;
+    }
+    .act-icon i { color: inherit; }
+
+    /* ── Right actions ── */
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        padding: 0 1.25rem;
+        height: 64px;
+        margin-right: auto; /* RTL: push to left side */
+    }
+
+    /* ── Toggler (mobile) ── */
+    .nav-toggler {
+        display: none;
+        background: none;
+        border: 1.5px solid #dee2e6;
+        border-radius: 8px;
+        padding: .35rem .55rem;
+        cursor: pointer;
+        color: #444;
+        margin: 0 1rem;
+    }
+    @@media (max-width: 991px) {
+        .nav-toggler { display: flex; }
+        .nav-desktop { display: none !important; }
+        .nav-mobile { display: block; }
+        .nav-mobile.closed { display: none; }
+        .act-dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: none; padding: 0 0 0 1rem; min-width: unset; display: block; border-radius: 0; pointer-events: auto; }
+        .nav-links { flex-direction: column; align-items: flex-start; height: auto; padding: .5rem 0; }
+        .nav-links > li > a, .nav-links > li > button { height: auto; padding: .6rem 1rem; border-bottom: none; }
+    }
+    @@media (min-width: 992px) {
+        .nav-mobile { display: none !important; }
+    }
+</style>
+
+<nav id="site-nav" dir="rtl">
+    <div class="d-flex align-items-center w-100">
+
+        @* ── Brand ── *@
+        <a asp-controller="Home" asp-action="Index" class="nav-brand-wrap">
+            <div class="nav-brand-icon">
+                <i class="bi bi-graph-up-arrow"></i>
             </div>
-
-        </div>
-
-         
-        </div>
-
-        <div class="navbar-nav mx-auto">
-        <a asp-controller="MoisCloture" asp-action="Index" class="nav-item nav-link text-center">
- EXERCICE 
+            <div class="nav-brand-text">
+                <strong>Dash-com</strong>
+                <span>NESDA</span>
+            </div>
         </a>
-    </div>
-        <div class="d-flex align-items-center pe-4">
+
+        @* ── Desktop nav ── *@
+        <div class="nav-desktop d-flex align-items-center flex-grow-1">
+            <ul class="nav-links">
+
+                @* Activities dropdown *@
+                <li id="act-li" style="position:relative;">
+                    <button id="act-btn" onclick="toggleAct()" aria-expanded="false">
+                        <i class="bi bi-grid-1x2" style="font-size:.8rem;opacity:.7"></i>
+                        الأنشطة
+                        <i class="bi bi-chevron-down caret"></i>
+                    </button>
+                    <div class="act-dropdown" id="act-dropdown">
+                        <a asp-controller="ActiviteJourneeInfo" asp-action="Index" class="act-item">
+                            <div class="act-icon"><i class="bi bi-calendar-event"></i></div>
+                            <span>أيام إعلامية وأبواب مفتوحة</span>
+                        </a>
+                        <a asp-controller="ActiviteForum" asp-action="Index" class="act-item">
+                            <div class="act-icon"><i class="bi bi-people"></i></div>
+                            <span>أيام دراسية وملتقيات</span>
+                        </a>
+                        <a asp-controller="ActivitePresse" asp-action="Index" class="act-item">
+                            <div class="act-icon"><i class="bi bi-newspaper"></i></div>
+                            <span>صحافة مكتوبة / إلكترونية</span>
+                        </a>
+                        <a asp-controller="ActiviteRadio" asp-action="Index" class="act-item">
+                            <div class="act-icon"><i class="bi bi-broadcast"></i></div>
+                            <span>تغطيات إذاعية</span>
+                        </a>
+                        <a asp-controller="ActiviteTelevision" asp-action="Index" class="act-item">
+                            <div class="act-icon"><i class="bi bi-camera-video"></i></div>
+                            <span>تغطيات تلفزيونية</span>
+                        </a>
+                        <a asp-controller="ActiviteReunionExterne" asp-action="Index" class="act-item">
+                            <div class="act-icon"><i class="bi bi-handshake"></i></div>
+                            <span>جلسات تنسيقية / اتفاقيات</span>
+                        </a>
+                        <a asp-controller="ActiviteSalon" asp-action="Index" class="act-item">
+                            <div class="act-icon"><i class="bi bi-shop"></i></div>
+                            <span>معارض وصالونات</span>
+                        </a>
+                    </div>
+                </li>
+
+                <li>
+                    <a asp-controller="MoisCloture" asp-action="Index">
+                        <i class="bi bi-calendar-lock" style="font-size:.8rem;opacity:.7"></i>
+                        الأشهر
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-controller="Dashboard" asp-action="Index">
+                        <i class="bi bi-bar-chart-line" style="font-size:.8rem;opacity:.7"></i>
+                        لوحة التحكم
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+        @* ── Right: auth ── *@
+        <div class="nav-right">
             <partial name="_LoginPartial" />
         </div>
 
+        @* ── Mobile toggler ── *@
+        <button class="nav-toggler" id="mob-toggle" onclick="toggleMobile()">
+            <i class="bi bi-list fs-5"></i>
+        </button>
+
     </div>
 
+    @* ── Mobile menu ── *@
+    <div class="nav-mobile closed px-3 pb-3" id="mob-menu">
+        <ul class="nav-links">
+            <li>
+                <button onclick="toggleActMob()" style="width:100%">
+                    <i class="bi bi-grid-1x2" style="font-size:.8rem;opacity:.7"></i>
+                    الأنشطة
+                    <i class="bi bi-chevron-down caret" id="mob-caret"></i>
+                </button>
+                <div class="act-dropdown closed" id="mob-act">
+                    <a asp-controller="ActiviteJourneeInfo" asp-action="Index" class="act-item">أيام إعلامية وأبواب مفتوحة</a>
+                    <a asp-controller="ActiviteForum" asp-action="Index" class="act-item">أيام دراسية وملتقيات</a>
+                    <a asp-controller="ActivitePresse" asp-action="Index" class="act-item">صحافة مكتوبة / إلكترونية</a>
+                    <a asp-controller="ActiviteRadio" asp-action="Index" class="act-item">تغطيات إذاعية</a>
+                    <a asp-controller="ActiviteTelevision" asp-action="Index" class="act-item">تغطيات تلفزيونية</a>
+                    <a asp-controller="ActiviteReunionExterne" asp-action="Index" class="act-item">جلسات تنسيقية / اتفاقيات</a>
+                    <a asp-controller="ActiviteSalon" asp-action="Index" class="act-item">معارض وصالونات</a>
+                </div>
+            </li>
+            <li><a asp-controller="MoisCloture" asp-action="Index">الأشهر</a></li>
+            <li><a asp-controller="Dashboard" asp-action="Index">لوحة التحكم</a></li>
+        </ul>
+        <div class="pt-2 pb-1">
+            <partial name="_LoginPartial" />
+        </div>
+    </div>
 </nav>
+
+<script>
+    /* Scroll shadow */
+    window.addEventListener('scroll', function () {
+        document.getElementById('site-nav').classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    /* Desktop dropdown */
+    function toggleAct() {
+        var li = document.getElementById('act-li');
+        var open = li.classList.toggle('open');
+        document.getElementById('act-btn').setAttribute('aria-expanded', open);
+    }
+    document.addEventListener('click', function (e) {
+        var li = document.getElementById('act-li');
+        if (li && !li.contains(e.target)) li.classList.remove('open');
+    });
+
+    /* Mobile menu */
+    function toggleMobile() {
+        var m = document.getElementById('mob-menu');
+        m.classList.toggle('closed');
+    }
+    function toggleActMob() {
+        var d = document.getElementById('mob-act');
+        var c = document.getElementById('mob-caret');
+        d.classList.toggle('closed');
+        c.style.transform = d.classList.contains('closed') ? '' : 'rotate(180deg)';
+    }
+</script>
