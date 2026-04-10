@@ -53,9 +53,16 @@
      @await Component.InvokeAsync("Menu")
 
     <!-- Navbar End -->
-    <div class="container">
+    @if (ViewData["FullWidth"] is true)
+    {
         @RenderBody()
-    </div>
+    }
+    else
+    {
+        <div class="container">
+            @RenderBody()
+        </div>
+    }
 
 
 

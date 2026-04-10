@@ -10,39 +10,27 @@ namespace Anade.Khadamat.Business
     {
         public MoisClotureBusinessService(IUnitOfWork unitOfWork) : base(unitOfWork) { }
 
-        // ── Query helpers ─────────────────────────────────────────────────────────
-
-        /// <summary>Returns true when the month row exists AND is flagged as closed.</summary>
         public bool EstCloture(int annee, int mois)
         {
             var row = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
             return row != null && row.IsCloture;
         }
 
-        /// <summary>
-        /// Call this from sub-entity lifecycle hooks to block CUD operations.
-        /// </summary>
         public void AssertMoisOuvert(int annee, int mois)
         {
             var row = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
-
             if (row == null || row.IsCloture)
-                throw new BusinessException(
-                    $"Le mois {new DateTime(annee, mois, 1):MMMM yyyy} est clôturé. Aucune modification n'est permise.");
+                throw new BusinessException("الشهر مغلق. لا يمكن القيام بأي تعديل.");
         }
-
-        // ── Ouvrir ───────────────────────────────────────────────────────────────
 
         public BusinessResult OuvrirMois(int annee, int mois, string userId)
         {
             try
             {
-                // Guard: month already exists
                 var existing = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
                 if (existing != null)
-                    throw new BusinessException("Ce mois est déjà créé. Vous ne pouvez pas le rouvrir via cette action (utilisez Réouvrir).");
+                    throw new BusinessException("هذا الشهر موجود بالفعل. استخدم إعادة الفتح للشهر المغلق.");
 
-                // Ensure previous month is closed (skip for the very first row)
                 var hasPrevious = _repository.Count() > 0;
                 if (hasPrevious)
                 {
@@ -50,7 +38,11 @@ namespace Anade.Khadamat.Business
                     var prev = _repository.GetSingle(x => x.Annee == prevDate.Year && x.Mois == prevDate.Month);
 
                     if (prev != null && !prev.IsCloture)
-                        throw new BusinessException("Le mois précédent doit être clôturé avant d'ouvrir un nouveau mois.");
+                    {
+                        var daysPassed = (DateTime.Now - new DateTime(prevDate.Year, prevDate.Month, 1)).Days;
+                        if (daysPassed > 7)
+                            throw new BusinessException("الشهر السابق لم يُغلق بعد أسبوع من الفتح. يجب إغلاق الشهر الحالي أولاً.");
+                    }
                 }
 
                 _repository.Add(new MoisCloture
@@ -73,34 +65,30 @@ namespace Anade.Khadamat.Business
             }
             catch (DataNotUpdatedException)
             {
-                return BuildFailure("Une erreur est survenue lors de l'ouverture du mois. Veuillez réessayer.");
+                return BuildFailure("خطأ أثناء فتح الشهر. حاول مجدداً.");
             }
             catch (Exception)
             {
-                return BuildFailure("Une erreur inattendue est survenue.");
+                return BuildFailure("حدث خطأ غير متوقع.");
             }
         }
-
-        // ── Clôturer ─────────────────────────────────────────────────────────────
 
         public BusinessResult CloturerMois(int annee, int mois, string userId)
         {
             try
             {
                 var row = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
-
                 if (row == null)
-                    throw new BusinessException("Ce mois n'a pas encore été ouvert.");
+                    throw new BusinessException("الشهر غير موجود.");
 
                 if (row.IsCloture)
-                    throw new BusinessException("Ce mois est déjà clôturé.");
+                    throw new BusinessException("الشهر مغلق بالفعل.");
 
                 row.IsCloture = true;
                 row.DateCloture = DateTime.Now;
                 row.CloturePar = userId;
 
                 _repository.Update(row);
-
                 if (_unitOfWork.SaveChanges() == 0)
                     throw new DataNotUpdatedException();
 
@@ -112,34 +100,30 @@ namespace Anade.Khadamat.Business
             }
             catch (DataNotUpdatedException)
             {
-                return BuildFailure("Une erreur est survenue lors de la clôture du mois. Veuillez réessayer.");
+                return BuildFailure("خطأ أثناء إغلاق الشهر. حاول مجدداً.");
             }
             catch (Exception)
             {
-                return BuildFailure("Une erreur inattendue est survenue.");
+                return BuildFailure("حدث خطأ غير متوقع.");
             }
         }
-
-        // ── Réouvrir (DG / Admin uniquement) ─────────────────────────────────────
 
         public BusinessResult ReouvrirMois(int annee, int mois, string userId)
         {
             try
             {
                 var row = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
-
                 if (row == null)
-                    throw new BusinessException("Ce mois n'existe pas.");
+                    throw new BusinessException("الشهر غير موجود.");
 
                 if (!row.IsCloture)
-                    throw new BusinessException("Ce mois est déjà ouvert.");
+                    throw new BusinessException("الشهر مفتوح بالفعل.");
 
                 row.IsCloture = false;
                 row.DateReouverture = DateTime.Now;
                 row.ReouvertPar = userId;
 
                 _repository.Update(row);
-
                 if (_unitOfWork.SaveChanges() == 0)
                     throw new DataNotUpdatedException();
 
@@ -151,15 +135,13 @@ namespace Anade.Khadamat.Business
             }
             catch (DataNotUpdatedException)
             {
-                return BuildFailure("Une erreur est survenue lors de la réouverture du mois. Veuillez réessayer.");
+                return BuildFailure("خطأ أثناء إعادة فتح الشهر. حاول مجدداً.");
             }
             catch (Exception)
             {
-                return BuildFailure("Une erreur inattendue est survenue.");
+                return BuildFailure("حدث خطأ غير متوقع.");
             }
         }
-
-        // ── Private ───────────────────────────────────────────────────────────────
 
         private static BusinessResult BuildFailure(string message)
         {
