@@ -4,6 +4,70 @@
     ViewData["Title"] = "تعديل التغطية التلفزيونية";
 }
 
+<style>
+    .act-form-page { background: linear-gradient(160deg,#eef2ff 0%,#f8f9fa 60%); min-height: calc(100vh - 64px); }
+    .act-form-card { border-radius: 18px; overflow: hidden; border: none; }
+    .act-form-header { background: linear-gradient(135deg,#4e57d4 0%,#6a76ef 100%); padding: 1.75rem 2rem; display: flex; align-items: center; gap: 1rem; }
+    .act-form-header-icon { width: 50px; height: 50px; background: rgba(255,255,255,.18); border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; color: #fff; flex-shrink: 0; }
+    .act-form-header-title { color: #fff; font-size: 1.1rem; font-weight: 700; margin: 0; line-height: 1.25; }
+    .act-form-header-sub  { color: rgba(255,255,255,.68); font-size: .78rem; margin: .15rem 0 0; }
+    .act-section-divider { font-size: .68rem; font-weight: 700; letter-spacing: .9px; color: #9099b5; padding-bottom: .45rem; border-bottom: 1.5px solid #eaecf4; margin: 1.5rem 0 1.1rem; }
+    .act-form-card .form-control,.act-form-card .form-select { border-color: #dde1ef; border-radius: 10px; font-size: .875rem; padding: .52rem .85rem; background: #fafbff; transition: border-color .2s, box-shadow .2s, background .2s; }
+    .act-form-card .form-control:focus,.act-form-card .form-select:focus { border-color: #7a8aef; background: #fff; box-shadow: 0 0 0 3.5px rgba(78,87,212,.11); }
+    .act-form-card .form-label { font-size: .8rem; font-weight: 600; color: #4e5568; margin-bottom: .32rem; }
+    .btn-act-save { background: linear-gradient(135deg,#4e57d4,#6a76ef); border: none; border-radius: 10px; color: #fff; padding: .58rem 2rem; font-weight: 600; font-size: .875rem; transition: opacity .2s, transform .15s; }
+    .btn-act-save:hover { opacity: .88; transform: translateY(-1px); color: #fff; }
+    .btn-act-cancel { border-radius: 10px; font-size: .875rem; padding: .58rem 1.4rem; color: #6c757d; border-color: #d0d4df; }
+    .btn-act-cancel:hover { background: #f4f5fa; color: #444; border-color: #bcc0ce; }
+</style>
+
+<div class="act-form-page py-5" dir="rtl">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-9">
+                <partial name="_Message" />
+                <div class="card shadow act-form-card">
+                    <div class="act-form-header">
+                        <div class="act-form-header-icon"><i class="bi bi-camera-video"></i></div>
+                        <div>
+                            <p class="act-form-header-title">تعديل التغطية التلفزيونية</p>
+                            <p class="act-form-header-sub">تغطيات تلفزيونية</p>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <form asp-action="Edit" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@ViewBag.TvId" />
+                            <input type="hidden" name="activiteId" value="@ViewBag.ActiviteId" />
+                            <p class="act-section-divider">معلومات التغطية</p>
+                            <div class="mb-3">
+                                <label asp-for="ChaineTV" class="form-label">محطة البث</label>
+                                <input asp-for="ChaineTV" class="form-control" placeholder="اسم القناة التلفزيونية" />
+                                <span asp-validation-for="ChaineTV" class="text-danger small"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Sujet" class="form-label">الموضوع</label>
+                                <input asp-for="Sujet" class="form-control" placeholder="موضوع التغطية" />
+                                <span asp-validation-for="Sujet" class="text-danger small"></span>
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="DateActivite" class="form-label">تاريخ البث</label>
+                                <input asp-for="DateActivite" type="date" class="form-control" />
+                                <span asp-validation-for="DateActivite" class="text-danger small"></span>
+                            </div>
+                            <div class="d-flex gap-2 pt-1">
+                                <button type="submit" class="btn btn-act-save">حفظ</button>
+                                <a asp-action="Index" class="btn btn-outline-secondary btn-act-cancel">إلغاء</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container-fluid py-4" dir="rtl">
     <div class="row justify-content-center">
         <div class="col-lg-7">

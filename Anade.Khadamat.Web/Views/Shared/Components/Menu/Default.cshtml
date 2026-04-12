@@ -127,10 +127,14 @@
         transition: background .18s ease, color .18s ease;
     }
     .act-item:hover {
-        background: #f0f4ff;
+        background: rgba(13,110,253,.055);
         color: #0d6efd;
     }
-    .act-item:hover .act-icon { background: #0d6efd; }
+    .act-item:hover .act-icon {
+        background: #d6e4ff;
+        color: #0a58ca;
+        box-shadow: 0 0 0 2.5px rgba(13,110,253,.22);
+    }
     .act-icon {
         width: 34px;
         height: 34px;
@@ -142,7 +146,7 @@
         justify-content: center;
         font-size: .8rem;
         flex-shrink: 0;
-        transition: background .18s ease, color .18s ease;
+        transition: background .18s ease, color .18s ease, box-shadow .18s ease;
     }
     .act-icon i { color: inherit; }
 
@@ -232,7 +236,7 @@
                             <span>جلسات تنسيقية / اتفاقيات</span>
                         </a>
                         <a asp-controller="ActiviteSalon" asp-action="Index" class="act-item">
-                            <div class="act-icon"><i class="bi bi-shop"></i></div>
+                            <div class="act-icon"><i class="bi bi-collection"></i></div>
                             <span>معارض وصالونات</span>
                         </a>
                     </div>
