@@ -73,7 +73,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultActivite = _activiteBusinessService.Add(activite);
             if (!resultActivite.Succeeded)
             {
-                ModelState.AddModelError("", resultActivite.Messages.First().Message);
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
                 return View(model);
             }
 
@@ -85,10 +85,10 @@ namespace Anade.Khadamat.Web.Controllers
             var resultExterne = _externeBusinessService.Add(Externe);
             if (!resultExterne.Succeeded)
             {
-                ModelState.AddModelError("", resultExterne.Messages.First().Message);
+                TempData["Message"] = resultExterne.ToBootstrapAlerts();
                 return View(model);
             }
-
+            TempData["Message"] = resultExterne.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -152,10 +152,10 @@ namespace Anade.Khadamat.Web.Controllers
             var result = _activiteBusinessService.Update(activite);
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("", result.Messages.First().Message);
+                TempData["Message"] = result.ToBootstrapAlerts();
                 return View(model);
             }
-
+            ViewData["Message"] = result.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -183,7 +183,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultExterne = _externeBusinessService.Delete(Externe);
             if (!resultExterne.Succeeded)
             {
-                TempData["Error"] = resultExterne.Messages.First().Message;
+                TempData["Message"] = resultExterne.ToBootstrapAlerts();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -193,38 +193,17 @@ namespace Anade.Khadamat.Web.Controllers
                 var resultActivite = _activiteBusinessService.Delete(Externe.Activite);
                 if (!resultActivite.Succeeded)
                 {
-                    TempData["Error"] = resultActivite.Messages.First().Message;
+                    TempData["Message"] = resultActivite.ToBootstrapAlerts();
                     return RedirectToAction(nameof(Index));
                 }
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
             }
 
             return RedirectToAction(nameof(Index));
         }
 
 
-        //[HttpPost]
-
-        //public virtual async Task<IActionResult> ExterneDataTable(DataTableAjaxModel model)
-        //{
-        //    var user = await _userService.GetUserEagerLoadedAsync(User);
-        //    var structure = await _userService.GetStructureFromUserAsync(user.Id);
-        //    GetDataTableParameters(model, out string search, out string orderBy, out int startRowIndex, out int maxRows);
-
-        //    if (!string.IsNullOrEmpty(search))
-        //    {
-        //        var result = _externeBusinessService.GetAllFilteredPaged(x => x.Activite.structureCode.StartsWith(structure.CodeStructure) && x.Activite.Sujet.Contains(search),
-        //                                                              orderBy, startRowIndex, maxRows, _externeBusinessService.GetDefaultLoadProperties());
-
-        //        return Json(new JQueryDataTableRetunedData<ActiviteReunionExterne> { draw = model.draw, recordsFiltered = result.TotalCount, recordsTotal = result.TotalCount, data = result.Items });
-        //    }
-        //    else
-        //    {
-        //        var result = _externeBusinessService.GetAllFilteredPaged(x => x.Activite.structureCode.StartsWith(structure.CodeStructure),
-        //                                                              orderBy, startRowIndex, maxRows, _externeBusinessService.GetDefaultLoadProperties());
-
-        //        return Json(new JQueryDataTableRetunedData<ActiviteReunionExterne> { draw = model.draw, recordsFiltered = result.TotalCount, recordsTotal = result.TotalCount, data = result.Items });
-        //    }
-        //}
+        
 
         [HttpPost]
         public virtual async Task<IActionResult> ExterneDataTable(DataTableAjaxModel model)
@@ -239,7 +218,10 @@ namespace Anade.Khadamat.Web.Controllers
                 if (structure.Designation == "DG")
                 {
                     var result = _externeBusinessService.GetAllFilteredPaged(
-                        x => x.Activite.Sujet.Contains(search),
+                      x => x.Activite.Sujet.Contains(search)
+                        || x.Activite.Lieu.Contains(search)
+                        || x.Activite.Participants.Contains(search)
+                        || x.Activite.Organisateurs.Contains(search),
                         orderBy, startRowIndex, maxRows,
                       _externeBusinessService.GetDefaultLoadProperties());
 
@@ -254,8 +236,11 @@ namespace Anade.Khadamat.Web.Controllers
                 else
                 {
                     var result = _externeBusinessService.GetAllFilteredPaged(
-                        x => x.Activite.structureCode.StartsWith(structure.CodeStructure)
-                             && x.Activite.Sujet.Contains(search),
+                      x => x.Activite.structureCode.StartsWith(structure.CodeStructure)
+                     && (x.Activite.Sujet.Contains(search)
+                         || x.Activite.Lieu.Contains(search)
+                         || x.Activite.Participants.Contains(search)
+                         || x.Activite.Organisateurs.Contains(search)),
                         orderBy, startRowIndex, maxRows,
                         _externeBusinessService.GetDefaultLoadProperties());
 

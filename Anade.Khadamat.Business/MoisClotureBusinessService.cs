@@ -20,7 +20,7 @@ namespace Anade.Khadamat.Business
         {
             var row = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
             if (row == null || row.IsCloture)
-                throw new BusinessException("الشهر مغلق. لا يمكن القيام بأي تعديل.");
+                throw new BusinessException("الشهر مغلق. لا يمكن القيام بأي اضافة تعديل أو الحذف ");
         }
 
         public BusinessResult OuvrirMois(int annee, int mois, string userId)
@@ -41,7 +41,7 @@ namespace Anade.Khadamat.Business
                     {
                         var daysPassed = (DateTime.Now - new DateTime(prevDate.Year, prevDate.Month, 1)).Days;
                         if (daysPassed > 7)
-                            throw new BusinessException("الشهر السابق لم يُغلق بعد أسبوع من الفتح. يجب إغلاق الشهر الحالي أولاً.");
+                            throw new BusinessException("الشهر السابق لم يُغلق بعد أسبوع من الفتح. يجب إغلاق الشهر الحالي أولاً");
                     }
                 }
 
@@ -65,11 +65,11 @@ namespace Anade.Khadamat.Business
             }
             catch (DataNotUpdatedException)
             {
-                return BuildFailure("خطأ أثناء فتح الشهر. حاول مجدداً.");
+                return BuildFailure("خطأ أثناء فتح الشهر. حاول مجدداً");
             }
             catch (Exception)
             {
-                return BuildFailure("حدث خطأ غير متوقع.");
+                return BuildFailure("حدث خطأ غير متوقع");
             }
         }
 
@@ -79,10 +79,10 @@ namespace Anade.Khadamat.Business
             {
                 var row = _repository.GetSingle(x => x.Annee == annee && x.Mois == mois);
                 if (row == null)
-                    throw new BusinessException("الشهر غير موجود.");
+                    throw new BusinessException("الشهر غير موجود");
 
                 if (row.IsCloture)
-                    throw new BusinessException("الشهر مغلق بالفعل.");
+                    throw new BusinessException("الشهر مغلق بالفعل");
 
                 row.IsCloture = true;
                 row.DateCloture = DateTime.Now;
@@ -100,11 +100,11 @@ namespace Anade.Khadamat.Business
             }
             catch (DataNotUpdatedException)
             {
-                return BuildFailure("خطأ أثناء إغلاق الشهر. حاول مجدداً.");
+                return BuildFailure("خطأ أثناء إغلاق الشهر. حاول مجدداً");
             }
             catch (Exception)
             {
-                return BuildFailure("حدث خطأ غير متوقع.");
+                return BuildFailure("حدث خطأ غير متوقع");
             }
         }
 
@@ -117,7 +117,7 @@ namespace Anade.Khadamat.Business
                     throw new BusinessException("الشهر غير موجود.");
 
                 if (!row.IsCloture)
-                    throw new BusinessException("الشهر مفتوح بالفعل.");
+                    throw new BusinessException("الشهر مفتوح بالفعل");
 
                 row.IsCloture = false;
                 row.DateReouverture = DateTime.Now;

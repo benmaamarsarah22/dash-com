@@ -72,7 +72,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultActivite = _activiteBusinessService.Add(activite);
             if (!resultActivite.Succeeded)
             {
-                ModelState.AddModelError("", resultActivite.Messages.First().Message);
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
                 return View(model);
             }
 
@@ -85,10 +85,10 @@ namespace Anade.Khadamat.Web.Controllers
             var resultRadio = _RadioBusinessService.Add(Radio);
             if (!resultRadio.Succeeded)
             {
-                ModelState.AddModelError("", resultRadio.Messages.First().Message);
+                TempData["Message"] = resultRadio.ToBootstrapAlerts();
                 return View(model);
             }
-
+            TempData["Message"] = resultRadio.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -154,16 +154,18 @@ namespace Anade.Khadamat.Web.Controllers
            
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("", result.Messages.First().Message);
+
+                TempData["Message"] = result.ToBootstrapAlerts();
                 return View(model);
             }
             var resultRadio = _RadioBusinessService.Update(radio);
             if (!resultRadio.Succeeded)
             {
-                ModelState.AddModelError("", resultRadio.Messages.First().Message);
+                TempData["Message"] = resultRadio.ToBootstrapAlerts();
                 return View(model);
             }
 
+            TempData["Message"] = result.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -191,7 +193,8 @@ namespace Anade.Khadamat.Web.Controllers
             var resultRadio = _RadioBusinessService.Delete(Radio);
             if (!resultRadio.Succeeded)
             {
-                TempData["Error"] = resultRadio.Messages.First().Message;
+
+                TempData["Message"] = resultRadio.ToBootstrapAlerts();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -201,37 +204,16 @@ namespace Anade.Khadamat.Web.Controllers
                 var resultActivite = _activiteBusinessService.Delete(Radio.Activite);
                 if (!resultActivite.Succeeded)
                 {
-                    TempData["Error"] = resultActivite.Messages.First().Message;
+                    TempData["Message"] = resultActivite.ToBootstrapAlerts();
                     return RedirectToAction(nameof(Index));
                 }
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
             }
+            
             return RedirectToAction(nameof(Index));
         }
 
-
-        [HttpPost]
-
-        //public virtual async Task<IActionResult> RadioDataTable(DataTableAjaxModel model)
-        //{
-        //    var user = await _userService.GetUserEagerLoadedAsync(User);
-        //    var structure = await _userService.GetStructureFromUserAsync(user.Id);
-        //    GetDataTableParameters(model, out string search, out string orderBy, out int startRowIndex, out int maxRows);
-
-        //    if (!string.IsNullOrEmpty(search))
-        //    {
-        //        var result = _RadioBusinessService.GetAllFilteredPaged(x => x.Activite.structureCode.StartsWith(structure.CodeStructure) && x.Activite.Sujet.Contains(search),
-        //                                                              orderBy, startRowIndex, maxRows, _RadioBusinessService.GetDefaultLoadProperties());
-
-        //        return Json(new JQueryDataTableRetunedData<ActiviteRadio> { draw = model.draw, recordsFiltered = result.TotalCount, recordsTotal = result.TotalCount, data = result.Items });
-        //    }
-        //    else
-        //    {
-        //        var result = _RadioBusinessService.GetAllFilteredPaged(x => x.Activite.structureCode.StartsWith(structure.CodeStructure),
-        //                                                              orderBy, startRowIndex, maxRows, _RadioBusinessService.GetDefaultLoadProperties());
-
-        //        return Json(new JQueryDataTableRetunedData<ActiviteRadio> { draw = model.draw, recordsFiltered = result.TotalCount, recordsTotal = result.TotalCount, data = result.Items });
-        //    }
-        //}
+ 
         [HttpPost]
         public virtual async Task<IActionResult> RadioDataTable(DataTableAjaxModel model)
         {
@@ -245,7 +227,9 @@ namespace Anade.Khadamat.Web.Controllers
                 if (structure.Designation == "DG")
                 {
                     var result = _RadioBusinessService.GetAllFilteredPaged(
-                        x => x.Activite.Sujet.Contains(search),
+                           x => x.Activite.Sujet.Contains(search)
+                        || x.StationRadio.Contains(search)
+                        || x.Intervenants.Contains(search),
                         orderBy, startRowIndex, maxRows,
                        _RadioBusinessService.GetDefaultLoadProperties());
 
@@ -261,7 +245,9 @@ namespace Anade.Khadamat.Web.Controllers
                 {
                     var result = _RadioBusinessService.GetAllFilteredPaged(
                         x => x.Activite.structureCode.StartsWith(structure.CodeStructure)
-                             && x.Activite.Sujet.Contains(search),
+                             && (x.Activite.Sujet.Contains(search)
+                                 || x.StationRadio.Contains(search)
+                                  ||x.Intervenants.Contains(search)),
                         orderBy, startRowIndex, maxRows,
                        _RadioBusinessService.GetDefaultLoadProperties());
 

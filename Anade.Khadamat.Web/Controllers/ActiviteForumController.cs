@@ -79,7 +79,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultActivite = _activiteBusinessService.Add(activite);
             if (!resultActivite.Succeeded)
             {
-                ModelState.AddModelError("", resultActivite.Messages.First().Message);
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
                 return View(model);
             }
 
@@ -91,10 +91,10 @@ namespace Anade.Khadamat.Web.Controllers
             var resultForum = _ForumBusinessService.Add(Forum);
             if (!resultForum.Succeeded)
             {
-                ModelState.AddModelError("", resultForum.Messages.First().Message);
+                TempData["Message"] = resultForum.ToBootstrapAlerts();
                 return View(model);
             }
-
+            TempData["Message"] = resultForum .ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -159,10 +159,10 @@ namespace Anade.Khadamat.Web.Controllers
             var result = _activiteBusinessService.Update(activite);
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("", result.Messages.First().Message);
+                TempData["Message"] = result.ToBootstrapAlerts();
                 return View(model);
             }
-
+            ViewData["Message"] = result.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -222,7 +222,10 @@ namespace Anade.Khadamat.Web.Controllers
                 if (structure.Designation == "DG")
                 {
                     var result = _ForumBusinessService.GetAllFilteredPaged(
-                        x => x.Activite.Sujet.Contains(search),
+                        x => x.Activite.Sujet.Contains(search)
+                        ||x.Activite.Lieu.Contains(search)
+                        ||x.Activite.Participants.Contains(search)
+                        ||x.Activite.Organisateurs.Contains(search),
                         orderBy, startRowIndex, maxRows,
                         _ForumBusinessService.GetDefaultLoadProperties());
 
@@ -237,8 +240,11 @@ namespace Anade.Khadamat.Web.Controllers
                 else
                 {
                     var result = _ForumBusinessService.GetAllFilteredPaged(
-                        x => x.Activite.structureCode.StartsWith(structure.CodeStructure)
-                             && x.Activite.Sujet.Contains(search),
+                     x => x.Activite.structureCode.StartsWith(structure.CodeStructure) 
+                     && (x.Activite.Sujet.Contains(search)
+                         || x.Activite.Lieu.Contains(search)
+                         || x.Activite.Participants.Contains(search)
+                         || x.Activite.Organisateurs.Contains(search)),
                         orderBy, startRowIndex, maxRows,
                        _ForumBusinessService.GetDefaultLoadProperties());
 

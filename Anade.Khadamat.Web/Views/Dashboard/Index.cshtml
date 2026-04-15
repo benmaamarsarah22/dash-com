@@ -398,7 +398,19 @@
                             @foreach (var item in Model.Data)
                             {
                                 <tr class="@(item.Total == 0 ? "table-secondary" : "")">
-                                    <td>@item.StructureCode</td>
+                                    <td>
+                                        @{
+                                            int code;
+                                            if (int.TryParse(item.StructureCode, out code) && code >= 161 && code <= 164)
+                                            {
+                                                @("160" + (code - 160))
+                                            }
+                                            else
+                                            {
+                                                @item.StructureCode
+                                            }
+                                        }
+                                    </td>
                                     <td>@item.StructureDesignation</td>
                                     <td>@item.JourneeInfoCount</td>
                                     <td>@item.SalonCount</td>

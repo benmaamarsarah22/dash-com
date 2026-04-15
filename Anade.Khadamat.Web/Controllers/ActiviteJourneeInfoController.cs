@@ -65,7 +65,7 @@ namespace Anade.Khadamat.Web.Controllers
                 UserName = user.UserName,
                 structureCode = structure.CodeStructure,
                 structureDesignation = structure.Designation,
-                TypeActiviteId = 2,
+                TypeActiviteId = 1,
                 DateActivite = model.DateActivite,
                 Sujet = model.Sujet,
                 Lieu = model.Lieu,
@@ -93,7 +93,7 @@ namespace Anade.Khadamat.Web.Controllers
                 TempData["Message"] = resultJournee.ToBootstrapAlerts();
                 return View(model);
             }
-
+            TempData["Message"] = resultJournee.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -190,7 +190,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultJournee = _journeeBusinessService.Delete(journee);
             if (!resultJournee.Succeeded)
             {
-                TempData["Error"] = resultJournee.Messages.First().Message;
+                TempData["Message"] = resultJournee.ToBootstrapAlerts();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -199,9 +199,10 @@ namespace Anade.Khadamat.Web.Controllers
                 var resultActivite = _activiteBusinessService.Delete(journee.Activite);
                 if (!resultActivite.Succeeded)
                 {
-                    TempData["Error"] = resultActivite.Messages.First().Message;
+                    TempData["Message"] = resultActivite.ToBootstrapAlerts();
                     return RedirectToAction(nameof(Index));
                 }
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
             }
 
 
@@ -224,15 +225,14 @@ namespace Anade.Khadamat.Web.Controllers
                 if (structure.Designation == "DG")
                 {
                     var result = _journeeBusinessService.GetAllFilteredPaged(
-                        x => x.Activite.Sujet.Contains(search),
+                       x => x.Activite.Sujet.Contains(search)
+                        || x.Activite.Lieu.Contains(search)
+                        || x.Activite.Participants.Contains(search)
+                        || x.Activite.Organisateurs.Contains(search),
                         orderBy, startRowIndex, maxRows,
                         _journeeBusinessService.GetDefaultLoadProperties());
 
-                    //foreach (var p in result.Items) {
-                    //    p.Activite.AgenceWilaya = _agenceWilayaBusinessService.GetById(p.Activite.AgenceWilayaId ?? 0);
                     
-                            
-                    //        }
 
                     return Json(new JQueryDataTableRetunedData<ActiviteJourneeInfo>
                     {
@@ -245,8 +245,11 @@ namespace Anade.Khadamat.Web.Controllers
                 else
                 {
                     var result = _journeeBusinessService.GetAllFilteredPaged(
-                        x => x.Activite.structureCode.StartsWith(structure.CodeStructure)
-                             && x.Activite.Sujet.Contains(search),
+                       x => x.Activite.structureCode.StartsWith(structure.CodeStructure)
+                     && (x.Activite.Sujet.Contains(search)
+                         || x.Activite.Lieu.Contains(search)
+                         || x.Activite.Participants.Contains(search)
+                         || x.Activite.Organisateurs.Contains(search)),
                         orderBy, startRowIndex, maxRows,
                         _journeeBusinessService.GetDefaultLoadProperties());
 

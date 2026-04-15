@@ -70,7 +70,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultActivite = _activiteBusinessService.Add(activite);
             if (!resultActivite.Succeeded)
             {
-                ModelState.AddModelError("", resultActivite.Messages.First().Message);
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
                 return View(model);
             }
 
@@ -83,10 +83,10 @@ namespace Anade.Khadamat.Web.Controllers
             var resultPresse = _PresseBusinessService.Add(Presse);
             if (!resultPresse.Succeeded)
             {
-                ModelState.AddModelError("", resultPresse.Messages.First().Message);
+                TempData["Message"] = resultPresse.ToBootstrapAlerts();
                 return View(model);
             }
-
+            TempData["Message"] = resultPresse.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -137,7 +137,7 @@ namespace Anade.Khadamat.Web.Controllers
             var activite = _activiteBusinessService.GetById(activiteId);
             var Presse = _PresseBusinessService.GetById(id);
 
-            if (activite == null | Presse == null)
+            if (activite == null || Presse == null)
                 return NotFound();
 
 
@@ -151,16 +151,16 @@ namespace Anade.Khadamat.Web.Controllers
 
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("", result.Messages.First().Message);
+                TempData["Message"] = result.ToBootstrapAlerts();
                 return View(model);
             }
             var resultPresse = _PresseBusinessService.Update(Presse);
             if (!resultPresse.Succeeded)
             {
-                ModelState.AddModelError("", resultPresse.Messages.First().Message);
+                TempData["Message"] = resultPresse.ToBootstrapAlerts();
                 return View(model);
             }
-
+            TempData["Message"] = resultPresse.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -188,7 +188,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultPresse = _PresseBusinessService.Delete(Presse);
             if (!resultPresse.Succeeded)
             {
-                TempData["Error"] = resultPresse.Messages.First().Message;
+                TempData["Message"] = resultPresse.ToBootstrapAlerts();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -198,9 +198,10 @@ namespace Anade.Khadamat.Web.Controllers
                 var resultActivite = _activiteBusinessService.Delete(Presse.Activite);
                 if (!resultActivite.Succeeded)
                 {
-                    TempData["Error"] = resultActivite.Messages.First().Message;
+                    TempData["Message"] = resultActivite.ToBootstrapAlerts();
                     return RedirectToAction(nameof(Index));
                 }
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
             }
             return RedirectToAction(nameof(Index));
         }
@@ -220,7 +221,8 @@ namespace Anade.Khadamat.Web.Controllers
                 if (structure.Designation == "DG")
                 {
                     var result = _PresseBusinessService.GetAllFilteredPaged(
-                        x => x.Activite.Sujet.Contains(search),
+                        x => x.Activite.Sujet.Contains(search)
+                        || x.Media.Contains(search),
                         orderBy, startRowIndex, maxRows,
                         _PresseBusinessService.GetDefaultLoadProperties());
 
@@ -236,7 +238,8 @@ namespace Anade.Khadamat.Web.Controllers
                 {
                     var result = _PresseBusinessService.GetAllFilteredPaged(
                         x => x.Activite.structureCode.StartsWith(structure.CodeStructure)
-                             && x.Activite.Sujet.Contains(search),
+                             && (x.Activite.Sujet.Contains(search)
+                                 || x.Media.Contains(search)),
                         orderBy, startRowIndex, maxRows,
                         _PresseBusinessService.GetDefaultLoadProperties());
 

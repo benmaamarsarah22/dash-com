@@ -75,7 +75,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultActivite = _activiteBusinessService.Add(activite);
             if (!resultActivite.Succeeded)
             {
-                ModelState.AddModelError("", resultActivite.Messages.First().Message);
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
                 return View(model);
             }
 
@@ -87,10 +87,10 @@ namespace Anade.Khadamat.Web.Controllers
             var resultSalon = _salonBusinessService.Add(Salon);
             if (!resultSalon.Succeeded)
             {
-                ModelState.AddModelError("", resultSalon.Messages.First().Message);
+                TempData["Message"] = resultSalon.ToBootstrapAlerts();
                 return View(model);
             }
-
+            TempData["Message"] = resultSalon.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -155,10 +155,10 @@ namespace Anade.Khadamat.Web.Controllers
             var result = _activiteBusinessService.Update(activite);
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("", result.Messages.First().Message);
+                TempData["Message"] = result.ToBootstrapAlerts();
                 return View(model);
             }
-
+            ViewData["Message"] = result.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -186,7 +186,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultSalon = _salonBusinessService.Delete(salon);
             if (!resultSalon.Succeeded)
             {
-                TempData["Error"] = resultSalon.Messages.First().Message;
+                TempData["Message"] = resultSalon.ToBootstrapAlerts();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -196,38 +196,17 @@ namespace Anade.Khadamat.Web.Controllers
                 var resultActivite = _activiteBusinessService.Delete(salon.Activite);
                 if (!resultActivite.Succeeded)
                 {
-                    TempData["Error"] = resultActivite.Messages.First().Message;
+                    TempData["Message"] = resultActivite.ToBootstrapAlerts();
                     return RedirectToAction(nameof(Index));
                 }
+
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-
-        //[HttpPost]
-
-        //public virtual async Task<IActionResult> SalonDataTable(DataTableAjaxModel model)
-        //{
-        //    var user = await _userService.GetUserEagerLoadedAsync(User);
-        //    var structure = await _userService.GetStructureFromUserAsync(user.Id);
-        //    GetDataTableParameters(model, out string search, out string orderBy, out int startRowIndex, out int maxRows);
-
-        //    if (!string.IsNullOrEmpty(search))
-        //    {
-        //        var result = _salonBusinessService.GetAllFilteredPaged(x => x.Activite.structureCode.StartsWith(structure.CodeStructure) && x.Activite.Sujet.Contains(search),
-        //                                                              orderBy, startRowIndex, maxRows, _salonBusinessService.GetDefaultLoadProperties());
-
-        //        return Json(new JQueryDataTableRetunedData<ActiviteSalon> { draw = model.draw, recordsFiltered = result.TotalCount, recordsTotal = result.TotalCount, data = result.Items });
-        //    }
-        //    else
-        //    {
-        //        var result = _salonBusinessService.GetAllFilteredPaged(x => x.Activite.structureCode.StartsWith(structure.CodeStructure),
-        //                                                              orderBy, startRowIndex, maxRows, _salonBusinessService.GetDefaultLoadProperties());
-
-        //        return Json(new JQueryDataTableRetunedData<ActiviteSalon> { draw = model.draw, recordsFiltered = result.TotalCount, recordsTotal = result.TotalCount, data = result.Items });
-        //    }
-        //}
+         
 
         [HttpPost]
         public virtual async Task<IActionResult> SalonDataTable(DataTableAjaxModel model)
@@ -242,7 +221,10 @@ namespace Anade.Khadamat.Web.Controllers
                 if (structure.Designation == "DG")
                 {
                     var result = _salonBusinessService.GetAllFilteredPaged(
-                        x => x.Activite.Sujet.Contains(search),
+                         x => x.Activite.Sujet.Contains(search)
+                        || x.Activite.Lieu.Contains(search)
+                        || x.Activite.Participants.Contains(search)
+                        || x.Activite.Organisateurs.Contains(search),
                         orderBy, startRowIndex, maxRows,
                         _salonBusinessService.GetDefaultLoadProperties());
 
@@ -257,8 +239,11 @@ namespace Anade.Khadamat.Web.Controllers
                 else
                 {
                     var result =_salonBusinessService.GetAllFilteredPaged(
-                        x => x.Activite.structureCode.StartsWith(structure.CodeStructure)
-                             && x.Activite.Sujet.Contains(search),
+                           x => x.Activite.structureCode.StartsWith(structure.CodeStructure)
+                     && (x.Activite.Sujet.Contains(search)
+                         || x.Activite.Lieu.Contains(search)
+                         || x.Activite.Participants.Contains(search)
+                         || x.Activite.Organisateurs.Contains(search)),
                         orderBy, startRowIndex, maxRows,
                         _salonBusinessService.GetDefaultLoadProperties());
 

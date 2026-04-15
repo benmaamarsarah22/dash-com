@@ -73,7 +73,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultActivite = _activiteBusinessService.Add(activite);
             if (!resultActivite.Succeeded)
             {
-                ModelState.AddModelError("", resultActivite.Messages.First().Message);
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
                 return View(model);
             }
 
@@ -86,10 +86,10 @@ namespace Anade.Khadamat.Web.Controllers
             var resultTv = _TvBusinessService.Add(Tv);
             if (!resultTv.Succeeded)
             {
-                ModelState.AddModelError("", resultTv.Messages.First().Message);
+                TempData["Message"] = resultTv.ToBootstrapAlerts();
                 return View(model);
             }
-
+            TempData["Message"] = resultTv.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -154,16 +154,16 @@ namespace Anade.Khadamat.Web.Controllers
 
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("", result.Messages.First().Message);
+                TempData["Message"] = result.ToBootstrapAlerts();
                 return View(model);
             }
             var resultTv = _TvBusinessService.Update(Tv);
             if (!resultTv.Succeeded)
             {
-                ModelState.AddModelError("", resultTv.Messages.First().Message);
+                TempData["Message"] = resultTv.ToBootstrapAlerts();
                 return View(model);
             }
-
+            TempData["Message"] = resultTv.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -191,7 +191,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultTv = _TvBusinessService.Delete(Tv);
             if (!resultTv.Succeeded)
             {
-                TempData["Error"] = resultTv.Messages.First().Message;
+                TempData["Message"] = resultTv.ToBootstrapAlerts();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -201,31 +201,34 @@ namespace Anade.Khadamat.Web.Controllers
                 var resultActivite = _activiteBusinessService.Delete(Tv.Activite);
                 if (!resultActivite.Succeeded)
                 {
-                    TempData["Error"] = resultActivite.Messages.First().Message;
+                    TempData["Message"] = resultActivite.ToBootstrapAlerts();
                     return RedirectToAction(nameof(Index));
                 }
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
             }
             return RedirectToAction(nameof(Index));
         }
 
 
- 
+
         [HttpPost]
         public virtual async Task<IActionResult> TvDataTable(DataTableAjaxModel model)
         {
             var user = await _userService.GetUserEagerLoadedAsync(User);
             var structure = await _userService.GetStructureFromUserAsync(user.Id);
 
-            GetDataTableParameters(model, out string search, out string orderBy, out int startRowIndex, out int maxRows);
+            GetDataTableParameters(model, out string search, out string orderBy,
+                                   out int startRowIndex, out int maxRows);
 
             if (!string.IsNullOrEmpty(search))
             {
                 if (structure.Designation == "DG")
                 {
                     var result = _TvBusinessService.GetAllFilteredPaged(
-                        x => x.Activite.Sujet.Contains(search),
+                        x => x.Activite.Sujet.Contains(search)
+                             || x.ChaineTV.Contains(search),   
                         orderBy, startRowIndex, maxRows,
-                       _TvBusinessService.GetDefaultLoadProperties());
+                        _TvBusinessService.GetDefaultLoadProperties());
 
                     return Json(new JQueryDataTableRetunedData<ActiviteTelevision>
                     {
@@ -239,9 +242,10 @@ namespace Anade.Khadamat.Web.Controllers
                 {
                     var result = _TvBusinessService.GetAllFilteredPaged(
                         x => x.Activite.structureCode.StartsWith(structure.CodeStructure)
-                             && x.Activite.Sujet.Contains(search),
+                             && (x.Activite.Sujet.Contains(search)
+                                 || x.ChaineTV.Contains(search)),  
                         orderBy, startRowIndex, maxRows,
-                       _TvBusinessService.GetDefaultLoadProperties());
+                        _TvBusinessService.GetDefaultLoadProperties());
 
                     return Json(new JQueryDataTableRetunedData<ActiviteTelevision>
                     {
@@ -259,7 +263,7 @@ namespace Anade.Khadamat.Web.Controllers
                     var result = _TvBusinessService.GetAllFilteredPaged(
                         x => true,
                         orderBy, startRowIndex, maxRows,
-                       _TvBusinessService.GetDefaultLoadProperties());
+                        _TvBusinessService.GetDefaultLoadProperties());
 
                     return Json(new JQueryDataTableRetunedData<ActiviteTelevision>
                     {
@@ -274,7 +278,7 @@ namespace Anade.Khadamat.Web.Controllers
                     var result = _TvBusinessService.GetAllFilteredPaged(
                         x => x.Activite.structureCode.StartsWith(structure.CodeStructure),
                         orderBy, startRowIndex, maxRows,
-                       _TvBusinessService.GetDefaultLoadProperties());
+                        _TvBusinessService.GetDefaultLoadProperties());
 
                     return Json(new JQueryDataTableRetunedData<ActiviteTelevision>
                     {
