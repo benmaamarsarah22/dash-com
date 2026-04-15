@@ -1,4 +1,5 @@
-﻿using Anade.Khadamat.Business;
+﻿using Anade.Business.Core;
+using Anade.Khadamat.Business;
 using Anade.Khadamat.Domain.Entity;
 using Anade.Khadamat.Identity;
 using Anade.Khadamat.Web.Models;
@@ -139,12 +140,14 @@ namespace Anade.Khadamat.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int activiteId, ActiviteJourneeInfoVM model)
         {
+
             if (!ModelState.IsValid)
                 return View(model);
 
             var activite = _activiteBusinessService.GetById(activiteId);
             if (activite == null)
                 return NotFound();
+                    
 
             activite.Sujet = model.Sujet;
             activite.Lieu = model.Lieu;
@@ -156,10 +159,10 @@ namespace Anade.Khadamat.Web.Controllers
             var result = _activiteBusinessService.Update(activite);
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("", result.Messages.First().Message);
+                TempData["Message"] = result.ToBootstrapAlerts();
                 return View(model);
             }
-
+            ViewData["Message"] = result.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -201,6 +204,7 @@ namespace Anade.Khadamat.Web.Controllers
                 }
             }
 
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -223,6 +227,12 @@ namespace Anade.Khadamat.Web.Controllers
                         x => x.Activite.Sujet.Contains(search),
                         orderBy, startRowIndex, maxRows,
                         _journeeBusinessService.GetDefaultLoadProperties());
+
+                    //foreach (var p in result.Items) {
+                    //    p.Activite.AgenceWilaya = _agenceWilayaBusinessService.GetById(p.Activite.AgenceWilayaId ?? 0);
+                    
+                            
+                    //        }
 
                     return Json(new JQueryDataTableRetunedData<ActiviteJourneeInfo>
                     {
@@ -258,6 +268,12 @@ namespace Anade.Khadamat.Web.Controllers
                         orderBy, startRowIndex, maxRows,
                         _journeeBusinessService.GetDefaultLoadProperties());
 
+                    //foreach (var p in result.Items)
+                    //{
+                    //    p.Activite.AgenceWilaya = _agenceWilayaBusinessService.GetById(p.Activite.AgenceWilayaId ?? 0);
+
+
+                    //}
                     return Json(new JQueryDataTableRetunedData<ActiviteJourneeInfo>
                     {
                         draw = model.draw,

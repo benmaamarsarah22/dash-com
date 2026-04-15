@@ -39,14 +39,14 @@
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@ViewBag.SalonId" />
                             <input type="hidden" name="activiteId" value="@ViewBag.ActiviteId" />
-                            <p class="act-section-divider">معلومات النشاط</p>
+                            <p class="act-section-divider">معلومات  المعرض</p>
                             <div class="mb-3">
-                                <label asp-for="Sujet" class="form-label">الموضوع</label>
+                                <label asp-for="Sujet" class="form-label">موضوع المعرض</label>
                                 <input asp-for="Sujet" class="form-control" placeholder="اسم المعرض / الصالون" />
                                 <span asp-validation-for="Sujet" class="text-danger small"></span>
                             </div>
                             <div class="mb-3">
-                                <label asp-for="Lieu" class="form-label">المكان</label>
+                                <label asp-for="Lieu" class="form-label">مكان المعرض</label>
                                 <input asp-for="Lieu" class="form-control" placeholder="مكان إقامة النشاط" />
                                 <span asp-validation-for="Lieu" class="text-danger small"></span>
                             </div>
@@ -70,7 +70,7 @@
                             </div>
                             <div class="mb-4">
                                 <label asp-for="Participants" class="form-label">المشاركون</label>
-                                <input asp-for="Participants" class="form-control" placeholder="العارضون والمشاركون" />
+                                <input asp-for="Participants" class="form-control" placeholder=" المشاركون" />
                                 <span asp-validation-for="Participants" class="text-danger small"></span>
                             </div>
                             <div class="d-flex gap-2 pt-1">
@@ -83,71 +83,7 @@
             </div>
         </div>
     </div>
-</div>
-
-
-<div class="container-fluid py-4" dir="rtl">
-    <div class="row justify-content-center">
-        <div class="col-lg-7">
-            <partial name="_Message" />
-
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <h5 class="mb-4 fw-700 text-primary">@ViewData["Title"]</h5>
-
-                    <form asp-action="Edit" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" value="@ViewBag.SalonId" />
-                        <input type="hidden" name="activiteId" value="@ViewBag.ActiviteId" />
-
-                        <div class="mb-3">
-                            <label asp-for="Sujet" class="form-label fw-600">الموضوع</label>
-                            <input asp-for="Sujet" class="form-control" />
-                            <span asp-validation-for="Sujet" class="text-danger small"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Lieu" class="form-label fw-600">المكان</label>
-                            <input asp-for="Lieu" class="form-control" />
-                            <span asp-validation-for="Lieu" class="text-danger small"></span>
-                        </div>
-
-                        <div class="row g-2 mb-3">
-                            <div class="col-md-6">
-                                <label asp-for="DateActivite" class="form-label fw-600">التاريخ</label>
-                                <input asp-for="DateActivite" type="date" class="form-control" />
-                                <span asp-validation-for="DateActivite" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="NombreVisiteurs" class="form-label fw-600">عدد الزوار</label>
-                                <input asp-for="NombreVisiteurs" type="number" class="form-control" />
-                                <span asp-validation-for="NombreVisiteurs" class="text-danger small"></span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Organisateurs" class="form-label fw-600">المنظمون</label>
-                            <input asp-for="Organisateurs" class="form-control" />
-                            <span asp-validation-for="Organisateurs" class="text-danger small"></span>
-                        </div>
-
-                        <div class="mb-4">
-                            <label asp-for="Participants" class="form-label fw-600">المشاركون</label>
-                            <input asp-for="Participants" class="form-control" />
-                            <span asp-validation-for="Participants" class="text-danger small"></span>
-                        </div>
-
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary px-4">حفظ</button>
-                            <a asp-action="Index" class="btn btn-outline-secondary px-4">إلغاء</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+</div> 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

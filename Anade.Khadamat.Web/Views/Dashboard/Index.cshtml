@@ -1,4 +1,4 @@
-﻿@model Anade.Khadamat.Web.ViewModels.DashboardFilterVM
+﻿@* @model Anade.Khadamat.Web.ViewModels.DashboardFilterVM
 
 @{
     ViewData["Title"] = "Dashboard Activités";
@@ -188,4 +188,299 @@
 
     });
 </script>
-} 
+
+} *@
+
+@model Anade.Khadamat.Web.ViewModels.DashboardFilterVM
+
+@{
+    ViewData["Title"] = "Dashboard Activités";
+
+    var moisListe = new[]
+    {
+        new { Valeur = 1, Nom = "جانفي" },
+        new { Valeur = 2, Nom = "فيفري" },
+        new { Valeur = 3, Nom = "مارس" },
+        new { Valeur = 4, Nom = "أفريل" },
+        new { Valeur = 5, Nom = "ماي" },
+        new { Valeur = 6, Nom = "جوان" },
+        new { Valeur = 7, Nom = "جويلية" },
+        new { Valeur = 8, Nom = "أوت" },
+        new { Valeur = 9, Nom = "سبتمبر" },
+        new { Valeur = 10, Nom = "أكتوبر" },
+        new { Valeur = 11, Nom = "نوفمبر" },
+        new { Valeur = 12, Nom = "ديسمبر" },
+    };
+}
+
+@section head {
+    <partial name="_datatables.style" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+
+    <style>
+        .act-form-page {
+            background: linear-gradient(160deg,#eef2ff 0%,#f8f9fa 60%);
+            min-height: calc(100vh - 64px);
+        }
+
+        .act-form-card {
+            border-radius: 18px;
+            overflow: hidden;
+            border: none;
+        }
+
+        .act-form-header {
+            background: linear-gradient(135deg,#4e57d4 0%,#6a76ef 100%);
+            padding: 1.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .act-form-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .act-form-header-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,.18);
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            color: #fff;
+        }
+
+        .act-form-header-title {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .act-form-header-sub {
+            color: rgba(255,255,255,.68);
+            font-size: .78rem;
+            margin: .15rem 0 0;
+        }
+
+        .btn-add {
+            background: rgba(255,255,255,.2);
+            border: 1.5px solid rgba(255,255,255,.45);
+            border-radius: 10px;
+            color: #fff;
+            padding: .5rem 1.25rem;
+            font-weight: 600;
+            font-size: .85rem;
+            text-decoration: none;
+            display: flex;
+            gap: .5rem;
+            align-items: center;
+        }
+
+            .btn-add:hover {
+                background: rgba(255,255,255,.32);
+                color: #fff;
+            }
+
+        .act-section-divider {
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .9px;
+            color: #9099b5;
+            padding-bottom: .45rem;
+            border-bottom: 1.5px solid #eaecf4;
+            margin-bottom: 1rem;
+        }
+
+        #dashboardTable thead th {
+            background: #4e57d4;
+            color: #fff;
+            font-size: .95rem;
+            font-weight: 700;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #dashboardTable tbody tr:hover {
+            background: #f0f2ff;
+        }
+
+        #dashboardTable tbody td {
+            text-align: center;
+            vertical-align: middle;
+            font-size: .95rem;
+        }
+
+      /*   .m-custom-100 {
+            margin-inline: 100px !important;
+        } */
+    </style>
+}
+
+<div class="act-form-page py-3 m-custom-100" dir="rtl">
+    <div class="container-fluid px-1">
+
+        <div class="card shadow act-form-card">
+
+            <!-- HEADER -->
+            <div class="act-form-header">
+                <div class="act-form-header-left">
+                    <div class="act-form-header-icon">
+                        <i class="bi bi-bar-chart-line-fill"></i>
+                    </div>
+                    <div>
+                        <p class="act-form-header-title">حصيلة نشاطات الإتصال</p>
+                        <p class="act-form-header-sub">الوكالات الولائية حسب الشهر والسنة</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-4">
+
+                <!-- FILTER -->
+                <form method="get" class="row mb-3">
+                    <div class="col-md-3">
+                        <select name="mois" class="form-control">
+                            <option value="">-- الشهر --</option>
+                            @foreach (var m in moisListe)
+                            {
+                                <option value="@m.Valeur" selected="@(Model.Mois == m.Valeur)">
+                                    @m.Nom
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <select name="annee" class="form-control">
+                            @for (int i = 2026; i <= 2035; i++)
+                            {
+                                <option value="@i" selected="@(Model.Annee == i)">
+                                    @i
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            تصفية
+                        </button>
+                    </div>
+                </form>
+
+                <p class="act-section-divider">النتائج</p>
+
+                <!-- TABLE -->
+                <div class="table-responsive">
+                    <table id="dashboardTable" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>الولاية</th>
+                                <th> الهيئة </th>
+                                <th>أيام إعلامية وأبواب مفتوحة</th>
+                                <th>معارض وصالونات</th>
+                                <th>أيام دراسية وملتقيات Forum</th>
+                                <th>جلسات تنسيقية خارجية/إتفاقيات</th>
+                                <th>تغطيات إذاعية</th>
+                                <th>تغطيات تلفزيونبة</th>
+                                <th>صحافة مكتوبة/إلكترونية</th>
+                                <th>المجموع</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model.Data)
+                            {
+                                <tr class="@(item.Total == 0 ? "table-secondary" : "")">
+                                    <td>@item.StructureCode</td>
+                                    <td>@item.StructureDesignation</td>
+                                    <td>@item.JourneeInfoCount</td>
+                                    <td>@item.SalonCount</td>
+                                    <td>@item.ForumCount</td>
+                                    <td>@item.ReunionCount</td>
+                                    <td>@item.RadioCount</td>
+                                    <td>@item.TVCount</td>
+                                    <td>@item.PresseCount</td>
+                                    <td class="fw-bold">@item.Total</td>
+                                </tr>
+                            }
+                        </tbody>
+
+                        <tfoot class="table-dark">
+                            <tr>
+                                <th colspan="2">الإجمالي</th>
+                                <th>@Model.Data.Sum(x => x.JourneeInfoCount)</th>
+                                <th>@Model.Data.Sum(x => x.SalonCount)</th>
+                                <th>@Model.Data.Sum(x => x.ForumCount)</th>
+                                <th>@Model.Data.Sum(x => x.ReunionCount)</th>
+                                <th>@Model.Data.Sum(x => x.RadioCount)</th>
+                                <th>@Model.Data.Sum(x => x.TVCount)</th>
+                                <th>@Model.Data.Sum(x => x.PresseCount)</th>
+                                <th>@Model.Data.Sum(x => x.Total)</th>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_datatables.script" />
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            var mois = '@Html.Raw(moisListe.FirstOrDefault(m => m.Valeur == Model.Mois)?.Nom)';
+            var annee = '@Model.Annee';
+
+            var titreExcel = 'حصيلة نشاطات الإتصال - ' + (mois || 'كل الأشهر') + ' ' + annee;
+
+            $('#dashboardTable').DataTable({
+                dom: 'Blfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'تصدير إلى Excel',
+                        title: null,
+                        messageTop: titreExcel,
+                        filename: 'حصيلة نشاطات الإتصال للوكالات الولائية_' + (mois || 'Tous') + '_' + annee,
+                        exportOptions: { columns: ':visible' }
+                    }
+                ],
+                 language: {
+                    sProcessing: "جارٍ المعالجة...",
+                    sSearch: "بحث&nbsp;:",
+                    sLengthMenu: "عرض _MENU_ عنصر",
+                    sInfo: "عرض العنصر _START_ إلى _END_ من أصل _TOTAL_ عنصر",
+                    sInfoEmpty: "عرض العنصر 0 إلى 0 من أصل 0 عنصر",
+                    sInfoFiltered: "(تم التصفية من أصل _MAX_ عنصر)",
+                    sLoadingRecords: "جارٍ التحميل...",
+                    sZeroRecords: "لم يتم العثور على عناصر مطابقة",
+                    sEmptyTable: "لا توجد بيانات متاحة في الجدول",
+                    oPaginate: {
+                        sFirst: "الأول",
+                        sPrevious: "السابق",
+                        sNext: "التالي",
+                        sLast: "الأخير"
+                    }
+                }
+            });
+
+        });
+    </script>
+}
+ 

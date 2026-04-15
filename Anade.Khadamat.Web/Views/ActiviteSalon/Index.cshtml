@@ -1,42 +1,184 @@
 ﻿@model IEnumerable<Anade.Khadamat.Domain.Entity.ActiviteSalon>
 
 @{
-    ViewData["Title"] = "Liste des Salons d'exposition";
+    ViewData["Title"] = "المعارض والصالونات";
+    ViewData["FullWidth"] = true;
 }
 
 @section head {
     <partial name="_datatables.style" />
 }
 
-<div class="card shadow-lg border-0 p-4">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <h3 class="mb-0 text-white">📋قائمة معارض وصالونات </h3>
-        <a asp-controller="ActiviteSalon" asp-action="Create" class="btn btn-success shadow-sm fw-semibold px-4 py-2 d-flex align-items-center rounded-pill">
-            <i class="bi bi-plus-circle me-2 fs-5"></i> إضافة
-        </a>
-    </div>
+<style>
+    .act-form-page {
+        background: linear-gradient(160deg,#eef2ff 0%,#f8f9fa 60%);
+        min-height: calc(100vh - 64px);
+    }
 
-    <div class="card-body">
-        <partial name="_Message" />
+    .act-form-card {
+        border-radius: 18px;
+        overflow: hidden;
+        border: none;
+    }
 
-        <div class="table-responsive overflow-hidden overflow-lg-auto mt-3">
-            <table class="table table-hover table-striped align-middle table-bordered shadow-sm rounded-3" id="myTable">
-                <thead class="text-white" style="background-color: var(--bs-primary);">
-                    <tr>
-                        <th>Id</th>
-                        <th>موضوع النشاط</th>
-                        <th>مكان النشاط</th>
-                        <th>التاريخ</th>
-                        <th>المنظمين</th>
-                        <th>المشاركين</th>
-                        <th>عدد الزوار</th>
-                        <th>إجراءات</th>
-                    </tr>
-                </thead>
-                <tbody class="table-group-divider">
-        
-                </tbody>
-            </table>
+    .act-form-header {
+        background: linear-gradient(135deg,#4e57d4 0%,#6a76ef 100%);
+        padding: 1.75rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .act-form-header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .act-form-header-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,.18);
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.35rem;
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    .act-form-header-title {
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1.25;
+    }
+
+    .act-form-header-sub {
+        color: rgba(255,255,255,.68);
+        font-size: .78rem;
+        margin: .15rem 0 0;
+    }
+
+    .btn-add {
+        background: rgba(255,255,255,.2);
+        border: 1.5px solid rgba(255,255,255,.45);
+        border-radius: 10px;
+        color: #fff;
+        padding: .5rem 1.25rem;
+        font-weight: 600;
+        font-size: .85rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        transition: background .2s;
+        text-decoration: none;
+    }
+
+        .btn-add:hover {
+            background: rgba(255,255,255,.32);
+            color: #fff;
+        }
+
+    .act-section-divider {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .9px;
+        color: #9099b5;
+        padding-bottom: .45rem;
+        border-bottom: 1.5px solid #eaecf4;
+        margin: 0 0 1.1rem;
+    }
+
+    .dt-buttons {
+        margin-bottom: 10px;
+    }
+
+    #myTable {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+        #myTable thead th {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: .4px;
+            color: #fff;
+            background-color: #4e57d4;
+            border-color: #5d67dc;
+            max-width: 50px;
+        }
+
+        #myTable tbody tr {
+            font-size: 1.2rem;
+        }
+
+            #myTable tbody tr:hover {
+                background: #f0f2ff;
+            }
+
+    .btn-action {
+        border-radius: 8px;
+        padding: .3rem .6rem;
+        font-size: 1.2rem;
+    }
+
+    .m-custom-100 {
+        margin-inline: 100px !important;
+    }
+</style>
+
+
+<div class="act-form-page py-2 m-custom-100" dir="rtl">
+    <div class="container-fluid px-1">
+
+        <div class="card shadow act-form-card">
+
+            <!-- HEADER -->
+            <div class="act-form-header">
+                <div class="act-form-header-left">
+                    <div class="act-form-header-icon">
+                        <i class="bi bi-shop"></i>
+                    </div>
+                    <div>
+                        <p class="act-form-header-title">المعارض والصالونات</p>
+                        <p class="act-form-header-sub">قائمة جميع المعارض والصالونات المسجلة</p>
+                    </div>
+                </div>
+
+                <a asp-controller="ActiviteSalon" asp-action="Create" class="btn-add">
+                    <i class="bi bi-plus-circle"></i> إضافة
+                </a>
+            </div>
+
+            <!-- BODY -->
+            <div class="card-body p-4">
+                <partial name="_Message" />
+
+                <p class="act-section-divider">قائمة المعارض</p>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle table-bordered" id="myTable">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>الهيئة</th>
+                                <th>موضوع المعرض</th>
+                                <th>مكان المعرض</th>
+                                <th>التاريخ</th>
+                                <th>المنظمون</th>
+                                <th>المشاركون</th>
+                                <th>عدد الزوار</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -44,45 +186,44 @@
 @section Scripts {
     <partial name="_datatables.script" />
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({
                 processing: true,
                 serverSide: true,
                 order: [[0, "desc"]],
-                lengthMenu: [[10, 20, 50, 9999], [10, 20, 50, "All"]],
+                lengthMenu: [[10, 20, 50, 9999], [10, 20, 50, "الكل"]],
                 ajax: {
                     url: "/ActiviteSalon/SalonDataTable",
                     type: "POST"
                 },
                 columns: [
-                    { data: "id", visible: false, searchable: false },
+                    { data: "id", visible: false },
+                    { data: "activite.agenceWilaya.designationAr" },
                     { data: "activite.sujet" },
                     { data: "activite.lieu" },
                     {
                         data: "activite.dateActivite",
-                        render: function(data) { return moment(data).format('DD/MM/YYYY'); }
+                        render: function (data) {
+                            return moment(data).format('DD/MM/YYYY');
+                        }
                     },
                     { data: "activite.organisateurs" },
                     { data: "activite.participants" },
                     { data: "activite.nombreVisiteurs" },
                     {
                         data: "id",
-                        sortable: false,
-                        searchable: false,
                         render: function (data, type, row) {
                             return `
                                 <div class="d-flex gap-2">
-
-                                 
-                                   <a href="/ActiviteJourneeInfo/Details/${row.id}"  class="btn btn-outline-info btn-sm" title="Détails">
-                                       <i class="bi bi-eye-fill"></i>
-                                   </a>
-                                    <a href="/ActiviteSalon/Edit/${row.id}" class="btn btn-outline-secondary btn-sm" title="Éditer">
+                                    <a href="/ActiviteSalon/Details/${row.id}" class="btn btn-outline-info btn-action" title="تفاصيل">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    <a href="/ActiviteSalon/Edit/${row.id}" class="btn btn-outline-secondary btn-action" title="تعديل">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="/ActiviteSalon/Delete/${row.id}" class="btn btn-outline-danger btn-sm" title="Supprimer">
+                                    <a href="/ActiviteSalon/Delete/${row.id}" class="btn btn-outline-danger btn-action" title="حذف">
                                         <i class="bi bi-trash-fill"></i>
                                     </a>
                                 </div>
@@ -91,42 +232,23 @@
                     }
                 ],
                 language: {
-                 sProcessing: "جارٍ المعالجة...",
-                 sSearch: "بحث&nbsp;:",
-                 sLengthMenu: "عرض _MENU_ عنصر",
-                 sInfo: "عرض العنصر _START_ إلى _END_ من أصل _TOTAL_ عنصر",
-                 sInfoEmpty: "عرض العنصر 0 إلى 0 من أصل 0 عنصر",
-                 sInfoFiltered: "(تم التصفية من أصل _MAX_ عنصر)",
-                 sLoadingRecords: "جارٍ التحميل...",
-                 sZeroRecords: "لم يتم العثور على عناصر مطابقة",
-                 sEmptyTable: "لا توجد بيانات متاحة في الجدول",
-                 oPaginate: {
-                     sFirst: "الأول",
-                     sPrevious: "السابق",
-                     sNext: "التالي",
-                     sLast: "الأخير"
-            }
-        },
-
-                    dom: 'Blfrtip',
-
-        buttons: [
-        {
-            extend: 'excelHtml5',
-            text: 'تصدير إلى Excel',
-            title: 'قائمة_أنشطة_اليوم',
-            className: 'btn btn-success',
-            autoFilter: true,
-
-
-            exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6]
-            }
-        }
-        ],
+                    sProcessing: "جارٍ المعالجة...",
+                    sSearch: "بحث:",
+                    sLengthMenu: "عرض _MENU_ عنصر",
+                    sInfo: "عرض _START_ إلى _END_ من أصل _TOTAL_",
+                    sZeroRecords: "لا توجد نتائج"
+                },
+                dom: 'Blfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'تصدير Excel',
+                        title: 'قائمة_المعارض_والصالونات',
+                        className: 'btn btn-success btn-sm',
+                        exportOptions: { columns: [1,2,3,4,5,6] }
+                    }
+                ]
             });
-
-            $('[data-bs-toggle="tooltip"]').tooltip();
         });
     </script>
 }

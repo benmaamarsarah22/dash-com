@@ -21,7 +21,9 @@ public class ActiviteSalonBusinessService
     public override Expression<Func<ActiviteSalon, object>>[] GetDefaultLoadProperties()
     {
         Expression<Func<ActiviteSalon, object>> loadActivite = x => x.Activite;
-        return new Expression<Func<ActiviteSalon, object>>[] { loadActivite };
+        Expression<Func<ActiviteSalon, object>> loadAgencyW = x => x.Activite.AgenceWilaya;
+        return new Expression<Func<ActiviteSalon, object>>[] { loadActivite, loadAgencyW };
+    
     }
 
     protected override void OnAdding(ActiviteSalon entity)

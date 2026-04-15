@@ -22,7 +22,9 @@ namespace Anade.Khadamat.Business
         public override Expression<Func<ActiviteTelevision, object>>[] GetDefaultLoadProperties()
         {
             Expression<Func<ActiviteTelevision, object>> loadActivite = x => x.Activite;
-            return new Expression<Func<ActiviteTelevision, object>>[] { loadActivite };
+            Expression<Func<ActiviteTelevision, object>> loadAgencyW = x => x.Activite.AgenceWilaya;
+            return new Expression<Func<ActiviteTelevision, object>>[] { loadActivite, loadAgencyW };
+             
         }
 
         protected override void OnAdding(ActiviteTelevision entity)

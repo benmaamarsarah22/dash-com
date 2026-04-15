@@ -5,31 +5,22 @@ namespace Anade.Khadamat.Web.ViewModels
 {
     public class ActiviteRadioVM
     {
-
-        [Display(Name = "المحطة الإذاعية")]
-        [Required(ErrorMessage = "La station radio est obligatoire")]
-        [StringLength(200)]
+        [Required(ErrorMessage = "المحطة الإذاعية إجبارية")]
+        [StringLength(100)]
         public string StationRadio { get; set; }
 
-
-
-        [Display(Name = "المتدخلين")]
-        [StringLength(300)]
+        [StringLength(100)]
+        [Required(ErrorMessage = "المتداخلون اجباريون ")]
         public string Intervenants { get; set; }
 
-
-        [Display(Name = "التاريخ")]
-        [Required(ErrorMessage = "La date est obligatoire")]
+        [Required(ErrorMessage = "التاريخ إجباري")]
         [DataType(DataType.Date)]
         public DateTime DateActivite { get; set; } = DateTime.Today;
 
-
-        [Display(Name = "االموضوع")]
-        [Required(ErrorMessage = "Le sujet est obligatoire")]
-        [StringLength(500, ErrorMessage = "Les organisateurs ne peuvent dépasser 500 caractères")]
+        [Required(ErrorMessage = "الموضوع إجباري")]
+        [StringLength(500, ErrorMessage = "لا يمكن أن يتجاوز الموضوع 500 حرف")]
         public string Sujet { get; set; }
 
-        
- 
+
     }
 }

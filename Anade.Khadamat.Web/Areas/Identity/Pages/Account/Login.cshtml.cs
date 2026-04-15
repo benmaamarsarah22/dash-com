@@ -78,7 +78,7 @@ namespace Anade.Khadamat.Web.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
            
-            returnUrl ??= Url.Content("~/ActiviteJourneeInfo/Index");
+            returnUrl ??= Url.Content("~/Home/Index"); 
 
            
 

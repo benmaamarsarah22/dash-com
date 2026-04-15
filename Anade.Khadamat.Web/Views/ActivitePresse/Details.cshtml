@@ -36,7 +36,7 @@
                         <div class="row g-3">
                             <div class="col-12">
                                 <div class="act-detail-tile">
-                                    <div class="tile-label">الوسيلة الإعلامية</div>
+                                    <div class="tile-label">الصحيفة / الموقع الإلكتروني</div>
                                     <div class="tile-value">@Model.Media</div>
                                 </div>
                             </div>
@@ -50,6 +50,12 @@
                                 <div class="act-detail-tile">
                                     <div class="tile-label">تاريخ النشر</div>
                                     <div class="tile-value">@Model.Activite.DateActivite.ToString("dd/MM/yyyy")</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="act-detail-tile">
+                                    <div class="tile-label">الهيئة</div>
+                                    <div class="tile-value">@Model.Activite.AgenceWilaya.DesignationAr</div>
                                 </div>
                             </div>
                         </div>

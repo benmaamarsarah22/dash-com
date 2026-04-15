@@ -1,40 +1,28 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-
 namespace Anade.Khadamat.Web.ViewModels
 {
     public class ActiviteJourneeInfoVM
     {
-        [Display(Name = "موضوع النشاط")]
-        [Required(ErrorMessage = "Le sujet est obligatoire")]
-        [StringLength(200, ErrorMessage = "Le sujet ne peut dépasser 200 caractères")]
+        [Required(ErrorMessage = "الموضوع إجباري")]
+        [StringLength(200, ErrorMessage = "لا يمكن أن يتجاوز الموضوع 200 حرف")]
         public string Sujet { get; set; }
 
-
-        [Display(Name = "مكان النشاط")]
-        [Required(ErrorMessage = "Le lieu est obligatoire")]
-        [StringLength(200, ErrorMessage = "Le lieu ne peut dépasser 200 caractères")]
+        [Required(ErrorMessage = "المكان إجباري")]
+        [StringLength(50, ErrorMessage = "لا يمكن أن يتجاوز المكان 50 حرفاً")]
         public string Lieu { get; set; }
 
-
-        [Display(Name = "المنظمين")]
-        [Required(ErrorMessage = "Les organisateurs sont obligatoires")]
-        [StringLength(300, ErrorMessage = "Les organisateurs ne peuvent dépasser 300 caractères")]
+        [Required(ErrorMessage = "المنظمون إجباري")]
+        [StringLength(200, ErrorMessage = "لا يمكن أن يتجاوز حقل المنظمين 200 حرف")]
         public string Organisateurs { get; set; }
 
-
-
-        [Display(Name = "المشاركين")]
-        [StringLength(500, ErrorMessage = "Les participants ne peuvent dépasser 500 caractères")]
+        [StringLength(200, ErrorMessage = "لا يمكن أن يتجاوز حقل المشاركين 200 حرف")]
         public string Participants { get; set; }
 
- 
-        [Display(Name = "عدد الزوار")]
-        [Range(0, int.MaxValue, ErrorMessage = "Le nombre de visiteurs doit être positif")]
+        [Range(0, int.MaxValue, ErrorMessage = "يجب أن يكون عدد الزوار رقماً موجباً")]
         public int? NombreVisiteurs { get; set; }
 
-        [Display(Name = "التاريخ")]
-        [Required(ErrorMessage = "La date est obligatoire")]
+        [Required(ErrorMessage = "التاريخ إجباري")]
         [DataType(DataType.Date)]
         public DateTime DateActivite { get; set; } = DateTime.Today;
     }

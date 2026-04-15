@@ -32,34 +32,34 @@
                         </div>
                     </div>
                     <div class="card-body p-4">
-                        <p class="act-section-divider">معلومات النشاط</p>
+                        <p class="act-section-divider">معلومات التظاهرة</p>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="act-detail-tile">
-                                    <div class="tile-label">الموضوع</div>
+                                    <div class="tile-label">موضوع التظاهرة </div>
                                     <div class="tile-value">@Model.Activite.Sujet</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="act-detail-tile">
-                                    <div class="tile-label">المكان</div>
+                                    <div class="tile-label">مكان التظاهرة</div>
                                     <div class="tile-value">@Model.Activite.Lieu</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="act-detail-tile">
-                                    <div class="tile-label">التاريخ</div>
+                                    <div class="tile-label">تاريخ</div>
                                     <div class="tile-value">@Model.Activite.DateActivite.ToString("dd/MM/yyyy")</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="act-detail-tile">
-                                    <div class="tile-label">عدد الحضور</div>
+                                    <div class="tile-label">عدد الزوار</div>
                                     <div class="tile-value">@Model.Activite.NombreVisiteurs</div>
                                 </div>
                             </div>
                         </div>
-                        <p class="act-section-divider">المنظمون والخبراء</p>
+                        <p class="act-section-divider">المنظمون والمشاركون</p>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="act-detail-tile">
@@ -69,8 +69,14 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="act-detail-tile">
-                                    <div class="tile-label">الخبراء</div>
+                                    <div class="tile-label"> المشاركون</div>
                                     <div class="tile-value">@Model.Activite.Participants</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="act-detail-tile">
+                                    <div class="tile-label">الهيئة</div>
+                                    <div class="tile-value">@Model.Activite.AgenceWilaya.DesignationAr</div>
                                 </div>
                             </div>
                         </div>
@@ -84,65 +90,4 @@
     </div>
 </div>
 
-<div class="card shadow-lg border-0 p-4">
-    <div class="card-header bg-info text-white">
-        <h3 class="mb-0">📄تفاصيل أيام دراسية وملتقيات – منتدى</h3>
-    </div>
-
-    <!-- Body -->
-    <div class="card-body">
-
-        <div class="row g-3">
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded bg-light">
-                    <strong>📌 موضوع النشاط</strong>
-                    <div>@Model.Activite.Sujet</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded bg-light">
-                    <strong>📍 المكان</strong>
-                    <div>@Model.Activite.Lieu</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded bg-light">
-                    <strong>📅 التاريخ</strong>
-                    <div>@Model.Activite.DateActivite.ToString("dd/MM/yyyy")</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded bg-light">
-                    <strong>👥 المنظمون</strong>
-                    <div>@Model.Activite.Organisateurs</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded bg-light">
-                    <strong>🙋 المشاركون</strong>
-                    <div>@Model.Activite.Participants</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="p-3 border rounded bg-light">
-                    <strong>📊 عدد الزوار</strong>
-                    <div>@Model.Activite.NombreVisiteurs</div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Button -->
-        <div class="text-start mt-4">
-            <a asp-action="Index" class="btn btn-outline-secondary px-4">
-                ⬅ رجوع
-            </a>
-        </div>
-    </div>
-</div>
+ 

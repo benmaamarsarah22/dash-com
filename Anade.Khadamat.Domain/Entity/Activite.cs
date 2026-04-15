@@ -9,8 +9,6 @@ namespace Anade.Khadamat.Domain.Entity
     public class Activite : IEntity<int>
     {
         public int Id { get; set; }
-
-
         
         public int? AgenceWilayaId { get; set; }
 

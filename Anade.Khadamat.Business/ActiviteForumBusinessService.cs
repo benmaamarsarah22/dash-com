@@ -21,7 +21,8 @@ public class ActiviteForumBusinessService
     public override Expression<Func<ActiviteForum, object>>[] GetDefaultLoadProperties()
     {
         Expression<Func<ActiviteForum, object>> loadActivite = x => x.Activite;
-        return new Expression<Func<ActiviteForum, object>>[] { loadActivite };
+        Expression<Func<ActiviteForum, object>> loadAgencyW = x => x.Activite.AgenceWilaya;
+        return new Expression<Func<ActiviteForum, object>>[] { loadActivite, loadAgencyW };
     }
 
     protected override void OnAdding(ActiviteForum entity)

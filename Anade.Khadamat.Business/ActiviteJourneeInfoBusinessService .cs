@@ -22,7 +22,8 @@ public class ActiviteJourneeInfoBusinessService
     public override Expression<Func<ActiviteJourneeInfo, object>>[] GetDefaultLoadProperties()
     {
         Expression<Func<ActiviteJourneeInfo, object>> loadActivite = x => x.Activite;
-        return new Expression<Func<ActiviteJourneeInfo, object>>[] { loadActivite };
+        Expression<Func<ActiviteJourneeInfo, object>> loadAgencyW = x => x.Activite.AgenceWilaya;
+        return new Expression<Func<ActiviteJourneeInfo, object>>[] { loadActivite, loadAgencyW };
     }
 
     protected override void OnAdding(ActiviteJourneeInfo entity)

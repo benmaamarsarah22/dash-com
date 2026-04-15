@@ -6,20 +6,18 @@ namespace Anade.Khadamat.Web.ViewModels
     public class ActiviteTelevisionVM
     {
         [Display(Name = "القناة التلفزيونية")]
-        [Required(ErrorMessage = "La chaine television est obligatoire")]
-        [StringLength(200)]
+        [Required(ErrorMessage = "القناة التلفزيونية إجبارية")]
+        [StringLength(100)]
         public string ChaineTV { get; set; }
 
-
         [Display(Name = "التاريخ")]
-        [Required(ErrorMessage = "La date est obligatoire")]
+        [Required(ErrorMessage = "التاريخ إجباري")]
         [DataType(DataType.Date)]
         public DateTime DateActivite { get; set; } = DateTime.Today;
 
-        [Display(Name = "موضوع ")]
-        [Required(ErrorMessage = "Le sujet est obligatoire")]
-        [StringLength(500, ErrorMessage = "Les organisateurs ne peuvent dépasser 500 caractères")]
+        [Display(Name = "الموضوع")]
+        [Required(ErrorMessage = "الموضوع إجباري")]
+        [StringLength(500, ErrorMessage = "لا يمكن أن يتجاوز الموضوع 500 حرف")]
         public string Sujet { get; set; }
-
     }
 }

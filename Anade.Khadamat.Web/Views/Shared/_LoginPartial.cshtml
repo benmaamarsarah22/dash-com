@@ -5,8 +5,29 @@
 
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
+<style>
+    .nav-link-custom {
+    display: flex;
+    align-items: center;
+    height: 64px;
+    padding: 0 1rem;
+    font-size: .875rem;
+    font-weight: 600;
+    color: #444;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color .2s ease, border-color .2s ease;
+}
 
-
+.nav-link-custom:hover {
+    color: #0d6efd;
+    border-bottom-color: #0d6efd;
+}
+</style>
 
 <div class="profile_details">
     <div class="nav-item dropdown">
@@ -18,19 +39,20 @@
 
 <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Salam @UserManager.GetUserName(User)!</a>
 
-<div class="dropdown-menu fade-down m-0">
-    <a id="manage" class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Paramètre</a>
+            <div class="dropdown-menu fade-down m-0" dir="rtl">
+   @*  <a id="manage" class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Paramètre</a> *@
 
-    <a class="dropdown-item" asp-controller="Dashboard" asp-action="index">Tableau de bord</a>
-    <a class="dropdown-item" asp-controller="Document" asp-action="Index">Historique des documents</a>
+ 
+   
 
     <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-        <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Déconnexion</button>
+                    <button id="logout" type="submit" class="nav-link-custom">تسجيل الخروج</button>
     </form>
 </div> }
                             else
                             {
-                <a class="btn btn-primary py-4 px-lg-5 d-none d-lg-block" id="login" asp-area="Identity" asp-page="/Account/Login">Connexion<i class="fa fa-arrow-right ms-3"></i></a>}
+            <a class="nav-link-custom" id="login" asp-area="Identity" asp-page="/Account/Login">تسجيل الدخول<i class="fa fa-arrow-left ms-2"></i></a>
+        }
     </div>
 
 

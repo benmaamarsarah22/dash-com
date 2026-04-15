@@ -22,7 +22,8 @@ namespace Anade.Khadamat.Business
         public override Expression<Func<ActiviteRadio, object>>[] GetDefaultLoadProperties()
         {
             Expression<Func<ActiviteRadio, object>> loadActivite = x => x.Activite;
-            return new Expression<Func<ActiviteRadio, object>>[] { loadActivite };
+            Expression<Func<ActiviteRadio, object>> loadAgencyW = x => x.Activite.AgenceWilaya;
+            return new Expression<Func<ActiviteRadio, object>>[] { loadActivite, loadAgencyW };
         }
 
         protected override void OnAdding(ActiviteRadio entity)

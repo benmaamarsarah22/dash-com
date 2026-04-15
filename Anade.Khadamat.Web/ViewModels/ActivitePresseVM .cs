@@ -4,23 +4,21 @@ using System.ComponentModel.DataAnnotations;
 namespace Anade.Khadamat.Web.ViewModels
 {
     public class ActivitePresseVM
+    
     {
-
-        [Display(Name = "الصحيفة / الموقع الإلكتروني")]
-        [Required(ErrorMessage = "La chaine television est obligatoire")]
-        [StringLength(200)]
+        [Required(ErrorMessage = "الصحيفة / الموقع الإلكتروني إجباري")]
+        [StringLength(100)]
         public string Media { get; set; }
 
 
-        [Display(Name = "الموضوع")]
-        [Required(ErrorMessage = "La date est obligatoire")]
+        [Required(ErrorMessage = "التاريخ إجباري")]
         [DataType(DataType.Date)]
         public DateTime DateActivite { get; set; } = DateTime.Today;
 
-        [Display(Name = "التاريخ")]
-        [Required(ErrorMessage = "Le sujet est obligatoire")]
-        [StringLength(500, ErrorMessage = "Les organisateurs ne peuvent dépasser 500 caractères")]
+        [Required(ErrorMessage = "الموضوع إجباري")]
+        [StringLength(500, ErrorMessage = "لا يمكن أن يتجاوز الموضوع 500 حرف")]
         public string Sujet { get; set; }
 
     }
 }
+

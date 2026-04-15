@@ -202,7 +202,12 @@
         @* ── Desktop nav ── *@
         <div class="nav-desktop d-flex align-items-center flex-grow-1">
             <ul class="nav-links">
-
+                <li>
+                    <a asp-controller="home" asp-action="Index">
+                        <i class="bi bi-calendar-lock" style="font-size:.8rem;opacity:.7"></i>
+                         الرئيسية
+                    </a>
+                </li>
                 @* Activities dropdown *@
                 <li id="act-li" style="position:relative;">
                     <button id="act-btn" onclick="toggleAct()" aria-expanded="false">
@@ -232,7 +237,7 @@
                             <span>تغطيات تلفزيونية</span>
                         </a>
                         <a asp-controller="ActiviteReunionExterne" asp-action="Index" class="act-item">
-                            <div class="act-icon"><i class="bi bi-handshake"></i></div>
+                            <div class="act-icon"><i class="fas fa-handshake"></i></div>
                             <span>جلسات تنسيقية / اتفاقيات</span>
                         </a>
                         <a asp-controller="ActiviteSalon" asp-action="Index" class="act-item">

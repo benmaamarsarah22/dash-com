@@ -21,7 +21,9 @@ public class ActiviteReunionExterneBusinessService
     public override Expression<Func<ActiviteReunionExterne, object>>[] GetDefaultLoadProperties()
     {
         Expression<Func<ActiviteReunionExterne, object>> loadActivite = x => x.Activite;
-        return new Expression<Func<ActiviteReunionExterne, object>>[] { loadActivite };
+        Expression<Func<ActiviteReunionExterne, object>> loadAgencyW = x => x.Activite.AgenceWilaya;
+        return new Expression<Func<ActiviteReunionExterne, object>>[] { loadActivite, loadAgencyW };
+        
     }
 
     protected override void OnAdding(ActiviteReunionExterne entity)
