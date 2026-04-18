@@ -46,11 +46,10 @@ namespace Anade.Khadamat.Web.Controllers
             _userService = userService;
         }
 
-        public async Task<IActionResult> Index(int? mois, int? annee)
+        public async Task<IActionResult> Index(DateTime? dateDebut, DateTime? dateFin)
         {
             var minDate = new DateTime(2026, 1, 1);
 
-            // ── Determine scope: DG sees all, agency users see only their own ──
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userStructure = userId != null
                 ? await _userService.GetStructureFromUserAsync(userId)
@@ -58,12 +57,10 @@ namespace Anade.Khadamat.Web.Controllers
 
             bool isDg = userStructure?.Niveau?.Code == "1";
 
-            // All agencies
             var agences = _agenceWilayaBusiness
                 .GetAll(_agenceWilayaBusiness.GetDefaultLoadProperties())
                 .ToList();
 
-            // Non-DG: restrict to the single agency whose Code matches the user's Structure
             if (!isDg && userStructure != null)
             {
                 agences = agences
@@ -71,55 +68,52 @@ namespace Anade.Khadamat.Web.Controllers
                     .ToList();
             }
 
-            // ── Activities ──
             var journees = _journeeBusinessService.GetAll(_journeeBusinessService.GetDefaultLoadProperties());
-            var forums   = _ForumBusinessService.GetAll(_ForumBusinessService.GetDefaultLoadProperties());
-            var presses  = _PresseBusinessService.GetAll(_PresseBusinessService.GetDefaultLoadProperties());
-            var radios   = _RadioBusinessService.GetAll(_RadioBusinessService.GetDefaultLoadProperties());
+            var forums = _ForumBusinessService.GetAll(_ForumBusinessService.GetDefaultLoadProperties());
+            var presses = _PresseBusinessService.GetAll(_PresseBusinessService.GetDefaultLoadProperties());
+            var radios = _RadioBusinessService.GetAll(_RadioBusinessService.GetDefaultLoadProperties());
             var reunions = _externeBusinessService.GetAll(_externeBusinessService.GetDefaultLoadProperties());
-            var salons   = _salonBusinessService.GetAll(_salonBusinessService.GetDefaultLoadProperties());
-            var tvs      = _TvBusinessService.GetAll(_TvBusinessService.GetDefaultLoadProperties());
+            var salons = _salonBusinessService.GetAll(_salonBusinessService.GetDefaultLoadProperties());
+            var tvs = _TvBusinessService.GetAll(_TvBusinessService.GetDefaultLoadProperties());
 
-            // ── Date filter ──
+            // ── Filtre par plage de dates ──
             journees = journees.Where(x => x.Activite.DateActivite >= minDate
-                && (!mois.HasValue  || x.Activite.DateActivite.Month == mois)
-                && (!annee.HasValue || x.Activite.DateActivite.Year  == annee)).ToList();
+                && (!dateDebut.HasValue || x.Activite.DateActivite.Date >= dateDebut.Value.Date)
+                && (!dateFin.HasValue || x.Activite.DateActivite.Date <= dateFin.Value.Date)).ToList();
 
             forums = forums.Where(x => x.Activite.DateActivite >= minDate
-                && (!mois.HasValue  || x.Activite.DateActivite.Month == mois)
-                && (!annee.HasValue || x.Activite.DateActivite.Year  == annee)).ToList();
+                && (!dateDebut.HasValue || x.Activite.DateActivite.Date >= dateDebut.Value.Date)
+                && (!dateFin.HasValue || x.Activite.DateActivite.Date <= dateFin.Value.Date)).ToList();
 
             presses = presses.Where(x => x.Activite.DateActivite >= minDate
-                && (!mois.HasValue  || x.Activite.DateActivite.Month == mois)
-                && (!annee.HasValue || x.Activite.DateActivite.Year  == annee)).ToList();
+                && (!dateDebut.HasValue || x.Activite.DateActivite.Date >= dateDebut.Value.Date)
+                && (!dateFin.HasValue || x.Activite.DateActivite.Date <= dateFin.Value.Date)).ToList();
 
             radios = radios.Where(x => x.Activite.DateActivite >= minDate
-                && (!mois.HasValue  || x.Activite.DateActivite.Month == mois)
-                && (!annee.HasValue || x.Activite.DateActivite.Year  == annee)).ToList();
+                && (!dateDebut.HasValue || x.Activite.DateActivite.Date >= dateDebut.Value.Date)
+                && (!dateFin.HasValue || x.Activite.DateActivite.Date <= dateFin.Value.Date)).ToList();
 
             reunions = reunions.Where(x => x.Activite.DateActivite >= minDate
-                && (!mois.HasValue  || x.Activite.DateActivite.Month == mois)
-                && (!annee.HasValue || x.Activite.DateActivite.Year  == annee)).ToList();
+                && (!dateDebut.HasValue || x.Activite.DateActivite.Date >= dateDebut.Value.Date)
+                && (!dateFin.HasValue || x.Activite.DateActivite.Date <= dateFin.Value.Date)).ToList();
 
             salons = salons.Where(x => x.Activite.DateActivite >= minDate
-                && (!mois.HasValue  || x.Activite.DateActivite.Month == mois)
-                && (!annee.HasValue || x.Activite.DateActivite.Year  == annee)).ToList();
+                && (!dateDebut.HasValue || x.Activite.DateActivite.Date >= dateDebut.Value.Date)
+                && (!dateFin.HasValue || x.Activite.DateActivite.Date <= dateFin.Value.Date)).ToList();
 
             tvs = tvs.Where(x => x.Activite.DateActivite >= minDate
-                && (!mois.HasValue  || x.Activite.DateActivite.Month == mois)
-                && (!annee.HasValue || x.Activite.DateActivite.Year  == annee)).ToList();
+                && (!dateDebut.HasValue || x.Activite.DateActivite.Date >= dateDebut.Value.Date)
+                && (!dateFin.HasValue || x.Activite.DateActivite.Date <= dateFin.Value.Date)).ToList();
 
-            // ── Flatten all activities with type codes ──
             var allActivites = journees.Select(x => new { x.Activite.AgenceWilayaId, Type = 1 })
-                .Concat(forums.Select(x   => new { x.Activite.AgenceWilayaId, Type = 3 }))
-                .Concat(presses.Select(x  => new { x.Activite.AgenceWilayaId, Type = 7 }))
-                .Concat(radios.Select(x   => new { x.Activite.AgenceWilayaId, Type = 5 }))
-                .Concat(salons.Select(x   => new { x.Activite.AgenceWilayaId, Type = 2 }))
+                .Concat(forums.Select(x => new { x.Activite.AgenceWilayaId, Type = 3 }))
+                .Concat(presses.Select(x => new { x.Activite.AgenceWilayaId, Type = 7 }))
+                .Concat(radios.Select(x => new { x.Activite.AgenceWilayaId, Type = 5 }))
+                .Concat(salons.Select(x => new { x.Activite.AgenceWilayaId, Type = 2 }))
                 .Concat(reunions.Select(x => new { x.Activite.AgenceWilayaId, Type = 4 }))
-                .Concat(tvs.Select(x      => new { x.Activite.AgenceWilayaId, Type = 6 }))
+                .Concat(tvs.Select(x => new { x.Activite.AgenceWilayaId, Type = 6 }))
                 .ToList();
 
-            // ── LEFT JOIN agencies → activities ──
             var dashboard = agences
                 .GroupJoin(
                     allActivites,
@@ -127,28 +121,27 @@ namespace Anade.Khadamat.Web.Controllers
                     ac => ac.AgenceWilayaId,
                     (ag, acts) => new DashboardActiviteVM
                     {
-                        StructureCode        = ag.Code,
+                        StructureCode = ag.Code,
                         StructureDesignation = ag.DesignationAr,
-                        JourneeInfoCount     = acts.Count(x => x.Type == 1),
-                        SalonCount           = acts.Count(x => x.Type == 2),
-                        ForumCount           = acts.Count(x => x.Type == 3),
-                        ReunionCount         = acts.Count(x => x.Type == 4),
-                        RadioCount           = acts.Count(x => x.Type == 5),
-                        TVCount              = acts.Count(x => x.Type == 6),
-                        PresseCount          = acts.Count(x => x.Type == 7),
+                        JourneeInfoCount = acts.Count(x => x.Type == 1),
+                        SalonCount = acts.Count(x => x.Type == 2),
+                        ForumCount = acts.Count(x => x.Type == 3),
+                        ReunionCount = acts.Count(x => x.Type == 4),
+                        RadioCount = acts.Count(x => x.Type == 5),
+                        TVCount = acts.Count(x => x.Type == 6),
+                        PresseCount = acts.Count(x => x.Type == 7),
                     })
                 .OrderBy(x => x.StructureCode)
                 .ToList();
 
             var model = new DashboardFilterVM
             {
-                Mois  = mois,
-                Annee = annee,
-                Data  = dashboard,
+                DateDebut = dateDebut,
+                DateFin = dateFin,
+                Data = dashboard,
             };
 
             return View(model);
         }
     }
-} 
-
+}

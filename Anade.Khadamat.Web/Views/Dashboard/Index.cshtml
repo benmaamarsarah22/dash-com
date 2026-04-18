@@ -1,216 +1,7 @@
-﻿@* @model Anade.Khadamat.Web.ViewModels.DashboardFilterVM
+﻿@model Anade.Khadamat.Web.ViewModels.DashboardFilterVM
 
 @{
     ViewData["Title"] = "Dashboard Activités";
- 
-    var moisListe = new[]
-    {
-        new { Valeur = 1, Nom = "جانفي" },
-        new { Valeur = 2, Nom = "فيفري" },
-        new { Valeur = 3, Nom = "مارس" },
-        new { Valeur = 4, Nom = "أفريل" },
-        new { Valeur = 5, Nom = "ماي" },
-        new { Valeur = 6, Nom = "جوان" },
-        new { Valeur = 7, Nom = "جويلية" },
-        new { Valeur = 8, Nom = "أوت" },
-        new { Valeur = 9, Nom = "سبتمبر" },
-        new { Valeur = 10, Nom = "أكتوبر" },
-        new { Valeur = 11, Nom = "نوفمبر" },
-        new { Valeur = 12, Nom = "ديسمبر" },
-    };
-    
-}
-@section head {
-    <partial name="_datatables.style" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-}
-
-
-<h2 class="mb-4">📊 حصيلة نشاطات الإتصال للوكالات الولائية </h2>
-
-<form method="get" class="row mb-3">
-    <div class="col-md-3">
-        <select name="mois" class="form-control">
-            <option value="">--  الشهر  --</option>
-            @foreach (var m in moisListe)
-            {
-                if (Model.Mois == m.Valeur)
-                {
-                    <option value="@m.Valeur" selected>@m.Nom</option>
-                }
-                else
-                {
-                    <option value="@m.Valeur">@m.Nom</option>
-                }
-            }
-        </select>
-    </div>
-
-    <div class="col-md-3">
-        <select name="annee" class="form-control">
-            @for (int i = 2026; i <= 2035; i++)
-            {
-                if (Model.Annee == i)
-                {
-                    <option value="@i" selected>@i</option>
-                }
-                else
-                {
-                    <option value="@i">@i</option>
-                }
-            }
-        </select>
-    </div>
-
-    <div class="col-md-3">
-        <button type="submit" class="btn btn-primary">تصفية </button>
-    </div>
-</form>
-
-<table id="dashboardTable"  class="table table-bordered table-striped text-center">
-    <thead class="table-dark">
-        <tr>
-            <th>الولاية</th>
-            <th>الوكالة الولائية</th>
-            <th>أيام إعلامية وأبواب مفتوحة</th>
-            <th>معارض وصالونات</th>
-            <th>أيام دراسية وملتقيات Forum</th>
-            <th>جلسات تنسيقية خارجية/إتفاقيات</th>
-            <th>تغطيات إذاعية</th>
-            <th>تغطيات تلفزيونبة</th>
-            <th>صحافة مكتوبة/إلكترونية</th>
-            <th>المجموع</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var item in Model.Data)
-        {
-            <tr class="@(item.Total == 0 ? "table-secondary" : "")">
-                <td>@item.StructureCode</td>
-                <td>@item.StructureDesignation</td>
-                <td>@item.JourneeInfoCount</td>
-                <td>@item.SalonCount</td>
-                <td>@item.ForumCount</td>
-                <td>@item.ReunionCount</td>
-                <td>@item.RadioCount</td>
-                <td>@item.TVCount</td>
-                <td>@item.PresseCount</td>
-                <td class="fw-bold">@item.Total</td>
-            </tr>
-        }
-    </tbody>
-
-    <tfoot class="table-dark">
-        <tr>
-            <th colspan="2">الإجمالي</th>
-            <th>@Model.Data.Sum(x => x.JourneeInfoCount)</th>
-            <th>@Model.Data.Sum(x => x.SalonCount)</th>
-            <th>@Model.Data.Sum(x => x.ForumCount)</th>
-            <th>@Model.Data.Sum(x => x.ReunionCount)</th>
-            <th>@Model.Data.Sum(x => x.RadioCount)</th>
-            <th>@Model.Data.Sum(x => x.TVCount)</th>
-            <th>@Model.Data.Sum(x => x.PresseCount)</th>
-            <th>@Model.Data.Sum(x => x.Total)</th>
-        </tr>
-    </tfoot>
-
-
-
-</table>
-
-@section Scripts {
-    <partial name="_datatables.script" />
- 
-
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-
-        var mois = '@Html.Raw(moisListe.FirstOrDefault(m => m.Valeur == Model.Mois)?.Nom)';
-        var annee = '@Model.Annee';
-
-        var titreExcel = 'حصيلة نشاطات الإتصال للوكالات الولائية - '
-                        + (mois ? mois : 'كل الأشهر') + ' ' + annee;
-
-        $('#dashboardTable').DataTable({
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "order": [],
-
-                "dom": 'Blfrtip',
-                 buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            text: '📥 تصدير إلى Excel',
-
-                            title: null,  
-
-                            messageTop: titreExcel,  
-
-                                filename: 'حصيلة نشاطات الإتصال للوكالات الولائية_' + (mois || 'Tous') + '_' + annee,
-
-                            exportOptions: {
-                                columns: ':visible'
-                            },
-
-                            customize: function (xlsx) {
-                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                                
-                                $('row:first c', sheet).attr('s', '2');
-                                 
-                                $('worksheet', sheet).attr('rightToLeft', '1');
-                            }
-                        }
-                    ],
-
-
-            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "الكل"]],
-
-            "language": {
-                "sSearch": "🔍 بحث:",
-                "sLengthMenu": "إظهار _MENU_ ولاية",
-                "sInfo": "عرض _START_ إلى _END_ من أصل _TOTAL_",
-                "sZeroRecords": "لا توجد نتائج",
-                "sEmptyTable": "لا توجد بيانات",
-                "oPaginate": {
-                    "sNext": "التالي",
-                    "sPrevious": "السابق"
-                }
-            }
-        });
-
-    });
-</script>
-
-} *@
-
-@model Anade.Khadamat.Web.ViewModels.DashboardFilterVM
-
-@{
-    ViewData["Title"] = "Dashboard Activités";
-
-    var moisListe = new[]
-    {
-        new { Valeur = 1, Nom = "جانفي" },
-        new { Valeur = 2, Nom = "فيفري" },
-        new { Valeur = 3, Nom = "مارس" },
-        new { Valeur = 4, Nom = "أفريل" },
-        new { Valeur = 5, Nom = "ماي" },
-        new { Valeur = 6, Nom = "جوان" },
-        new { Valeur = 7, Nom = "جويلية" },
-        new { Valeur = 8, Nom = "أوت" },
-        new { Valeur = 9, Nom = "سبتمبر" },
-        new { Valeur = 10, Nom = "أكتوبر" },
-        new { Valeur = 11, Nom = "نوفمبر" },
-        new { Valeur = 12, Nom = "ديسمبر" },
-    };
 }
 
 @section head {
@@ -268,24 +59,12 @@
             margin: .15rem 0 0;
         }
 
-        .btn-add {
-            background: rgba(255,255,255,.2);
-            border: 1.5px solid rgba(255,255,255,.45);
-            border-radius: 10px;
-            color: #fff;
-            padding: .5rem 1.25rem;
-            font-weight: 600;
-            font-size: .85rem;
-            text-decoration: none;
-            display: flex;
-            gap: .5rem;
+        .btn {
+            display: inline-flex;
             align-items: center;
+            justify-content: center;
+            line-height: 1.5;
         }
-
-            .btn-add:hover {
-                background: rgba(255,255,255,.32);
-                color: #fff;
-            }
 
         .act-section-divider {
             font-size: .68rem;
@@ -316,15 +95,39 @@
             font-size: .95rem;
         }
 
-      /*   .m-custom-100 {
-            margin-inline: 100px !important;
-        } */
+        .btn-excel-custom {
+            background: #caf8f7 !important;
+            border-radius: 5px !important;
+            border: none !important;
+            margin: 5px !important;
+        }
+
+            .btn-excel-custom span {
+                color: #000 !important;
+            }
+
+        .btn-tasfiya {
+            background: #4e57d4 !important;
+            border-radius: 5px !important;
+            transition: 0.2s ease-in-out;
+            color: white;
+            border: 2px solid #fff !important;
+        }
+
+            .btn-tasfiya:hover {
+                background: #fff !important;
+                color: #4e57d4 !important;
+                border: 2px solid #4e57d4 !important;
+            }
+
+        .rounded-2 {
+            border-radius: 5px !important;
+        }
     </style>
 }
 
-<div class="act-form-page py-3 m-custom-100" dir="rtl">
+<div class="act-form-page py-3" dir="rtl">
     <div class="container-fluid px-1">
-
         <div class="card shadow act-form-card">
 
             <!-- HEADER -->
@@ -335,7 +138,7 @@
                     </div>
                     <div>
                         <p class="act-form-header-title">حصيلة نشاطات الإتصال</p>
-                        <p class="act-form-header-sub">الوكالات الولائية حسب الشهر والسنة</p>
+                        <p class="act-form-header-sub">الوكالات الولائية حسب الفترة الزمنية</p>
                     </div>
                 </div>
             </div>
@@ -343,52 +146,60 @@
             <div class="card-body p-4">
 
                 <!-- FILTER -->
-                <form method="get" class="row mb-3">
+                <form method="get" class="row mb-3 align-items-end g-2">
                     <div class="col-md-3">
-                        <select name="mois" class="form-control">
-                            <option value="">-- الشهر --</option>
-                            @foreach (var m in moisListe)
-                            {
-                                <option value="@m.Valeur" selected="@(Model.Mois == m.Valeur)">
-                                    @m.Nom
-                                </option>
-                            }
-                        </select>
+                        <label class="form-label text-muted" style="font-size:.8rem;font-weight:600;">
+                            من تاريخ
+                        </label>
+                        <input type="date"
+                               name="dateDebut"
+                               class="form-control rounded-2"
+                               value="@(Model.DateDebut.HasValue? Model.DateDebut.Value.ToString("yyyy-MM-dd") : "")" />
                     </div>
 
                     <div class="col-md-3">
-                        <select name="annee" class="form-control">
-                            @for (int i = 2026; i <= 2035; i++)
-                            {
-                                <option value="@i" selected="@(Model.Annee == i)">
-                                    @i
-                                </option>
-                            }
-                        </select>
+                        <label class="form-label text-muted" style="font-size:.8rem;font-weight:600;">
+                            إلى تاريخ
+                        </label>
+                        <input type="date"
+                               name="dateFin"
+                               class="form-control rounded-2"
+                               value="@(Model.DateFin.HasValue? Model.DateFin.Value.ToString("yyyy-MM-dd") : "")" />
                     </div>
 
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary w-100">
-                            تصفية
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100 rounded-2 btn-tasfiya">
+                            <i class="bi bi-funnel-fill me-1"></i> تصفية
                         </button>
                     </div>
+
+                    @if (Model.DateDebut.HasValue || Model.DateFin.HasValue)
+                    {
+                        <div class="col-md-3 d-flex align-items-end">
+                            <a href="@Url.Action("Index", "Dashboard")"
+                               class="btn w-100 rounded-2"
+                               style="background:#f0f2ff;color:#4e57d4;border:1.5px solid #4e57d4;font-weight:600;">
+                                <i class="bi bi-x-circle me-1"></i> إلغاء التصفية
+                            </a>
+                        </div>
+                    }
                 </form>
 
                 <p class="act-section-divider">النتائج</p>
 
-                <!-- TABLE -->
+                <!-- ✅ TABLE : tfoot INSIDE table, BEFORE closing </div> -->
                 <div class="table-responsive">
                     <table id="dashboardTable" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>الولاية</th>
-                                <th> الهيئة </th>
+                                <th>الهيئة</th>
                                 <th>أيام إعلامية وأبواب مفتوحة</th>
                                 <th>معارض وصالونات</th>
                                 <th>أيام دراسية وملتقيات Forum</th>
                                 <th>جلسات تنسيقية خارجية/إتفاقيات</th>
                                 <th>تغطيات إذاعية</th>
-                                <th>تغطيات تلفزيونبة</th>
+                                <th>تغطيات تلفزيونية</th>
                                 <th>صحافة مكتوبة/إلكترونية</th>
                                 <th>المجموع</th>
                             </tr>
@@ -424,6 +235,7 @@
                             }
                         </tbody>
 
+                        <!-- ✅ tfoot INSIDE <table>, BEFORE </table> -->
                         <tfoot class="table-dark">
                             <tr>
                                 <th colspan="2">الإجمالي</th>
@@ -440,10 +252,10 @@
 
                     </table>
                 </div>
+                <!-- ✅ </div> fermé APRÈS </table> -->
 
             </div>
         </div>
-
     </div>
 </div>
 
@@ -456,10 +268,18 @@
     <script>
         $(document).ready(function () {
 
-            var mois = '@Html.Raw(moisListe.FirstOrDefault(m => m.Valeur == Model.Mois)?.Nom)';
-            var annee = '@Model.Annee';
+            // ✅ Variables dateDebut / dateFin (plus de mois/annee)
+            var dateDebut = '@(Model.DateDebut.HasValue? Model.DateDebut.Value.ToString("yyyy-MM-dd") : "")';
+            var dateFin   = '@(Model.DateFin.HasValue? Model.DateFin.Value.ToString("yyyy-MM-dd")   : "")';
 
-            var titreExcel = 'حصيلة نشاطات الإتصال - ' + (mois || 'كل الأشهر') + ' ' + annee;
+            var titreExcel = 'حصيلة نشاطات الإتصال';
+            if (dateDebut || dateFin) {
+                titreExcel += ' - من ' + (dateDebut || '...') + ' إلى ' + (dateFin || '...');
+            }
+
+            // ✅ Nom du fichier Excel
+            var filename = 'حصيلة نشاطات الإتصال_'
+                         + (dateDebut || 'بداية') + '_إلى_' + (dateFin || 'نهاية');
 
             $('#dashboardTable').DataTable({
                 dom: 'Blfrtip',
@@ -469,30 +289,28 @@
                         text: 'تصدير إلى Excel',
                         title: null,
                         messageTop: titreExcel,
-                        filename: 'حصيلة نشاطات الإتصال للوكالات الولائية_' + (mois || 'Tous') + '_' + annee,
+                        className: 'btn-excel-custom',
+                        filename: filename,
                         exportOptions: { columns: ':visible' }
                     }
                 ],
-                 language: {
-                    sProcessing: "جارٍ المعالجة...",
-                    sSearch: "بحث&nbsp;:",
-                    sLengthMenu: "عرض _MENU_ عنصر",
-                    sInfo: "عرض العنصر _START_ إلى _END_ من أصل _TOTAL_ عنصر",
-                    sInfoEmpty: "عرض العنصر 0 إلى 0 من أصل 0 عنصر",
+                language: {
+                    sProcessing:   "جارٍ المعالجة...",
+                    sSearch:       "بحث:",
+                    sLengthMenu:   "عرض _MENU_ عنصر",
+                    sInfo:         "عرض _START_ إلى _END_ من أصل _TOTAL_ عنصر",
+                    sInfoEmpty:    "عرض 0 إلى 0 من أصل 0 عنصر",
                     sInfoFiltered: "(تم التصفية من أصل _MAX_ عنصر)",
-                    sLoadingRecords: "جارٍ التحميل...",
-                    sZeroRecords: "لم يتم العثور على عناصر مطابقة",
-                    sEmptyTable: "لا توجد بيانات متاحة في الجدول",
+                    sZeroRecords:  "لم يتم العثور على عناصر مطابقة",
+                    sEmptyTable:   "لا توجد بيانات متاحة في الجدول",
                     oPaginate: {
-                        sFirst: "الأول",
+                        sFirst:    "الأول",
                         sPrevious: "السابق",
-                        sNext: "التالي",
-                        sLast: "الأخير"
+                        sNext:     "التالي",
+                        sLast:     "الأخير"
                     }
                 }
             });
-
         });
     </script>
 }
- 
