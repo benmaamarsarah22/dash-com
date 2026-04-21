@@ -3,6 +3,7 @@ using Anade.Khadamat.Domain.Entity;
 using Anade.Khadamat.Identity;
 using Anade.Khadamat.Web.Models;
 using Anade.Khadamat.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Anade.Khadamat.Web.Controllers
 {
+    [Authorize(Roles = "CommunicationDG,CommunicationAG")]
     public class ActiviteSalonController : Controller
     {
         private readonly ActiviteBusinessService _activiteBusinessService;

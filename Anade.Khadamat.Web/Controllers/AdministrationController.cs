@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Anade.Khadamat.Web.Controllers
 {
+
     public class AdministrationController : Controller
     {
         private readonly RoleManager<Role> roleManager;

@@ -3,6 +3,7 @@ using Anade.Khadamat.Data;
 using Anade.Khadamat.Domain.Entity;
 using Anade.Khadamat.Identity;
 using Anade.Khadamat.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Anade.Khadamat.Web.Controllers
 {
+    [Authorize(Roles = "CommunicationDG,CommunicationAG")]
     public class DashboardController : Controller
     {
         private readonly ActiviteJourneeInfoBusinessService _journeeBusinessService;

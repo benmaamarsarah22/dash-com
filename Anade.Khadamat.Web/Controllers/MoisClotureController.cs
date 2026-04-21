@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace Anade.Khadamat.Web.Controllers
 {
-    [Authorize(Roles = "DG,Admin")]
-    [Route("[controller]/[action]")]
+    //[Authorize(Roles = "DG,Admin")]
+    //[Route("[controller]/[action]")]
     public class MoisClotureController : Controller
     {
         private readonly MoisClotureBusinessService _moisService;
@@ -21,6 +21,7 @@ namespace Anade.Khadamat.Web.Controllers
             _userService = userService;
         }
 
+        [Authorize(Roles = "CommunicationDG,CommunicationAG")]
         [HttpGet]
         public IActionResult Index()
         {
@@ -32,6 +33,7 @@ namespace Anade.Khadamat.Web.Controllers
             return View(moisList);
         }
 
+        [Authorize(Roles = "CommunicationDG")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Ouvrir(int annee, int mois)
@@ -43,6 +45,7 @@ namespace Anade.Khadamat.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "CommunicationDG")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Cloturer(int annee, int mois)
@@ -54,9 +57,10 @@ namespace Anade.Khadamat.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "CommunicationDG")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "DG,Admin")]
+      
         public IActionResult Reouvrir(int annee, int mois)
         {
             var userId = _userService.GetUserEagerLoadedAsync(User).Result?.UserName ?? User.Identity.Name;

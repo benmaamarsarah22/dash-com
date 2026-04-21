@@ -3,6 +3,7 @@ using Anade.Khadamat.Domain.Entity;
 using Anade.Khadamat.Identity;
 using Anade.Khadamat.Web.Models;
 using Anade.Khadamat.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -10,26 +11,23 @@ using System.Threading.Tasks;
 
 namespace Anade.Khadamat.Web.Controllers
 {
+    [Authorize(Roles = "CommunicationDG,CommunicationAG")]
     public class ActiviteForumController : Controller
     {
         private readonly ActiviteBusinessService _activiteBusinessService;
         private readonly ActiviteForumBusinessService _ForumBusinessService;
-         
         private readonly AgenceWilayaBusinessService _agenceWilayaBusinessService;
- 
         private readonly UserService _userService;
 
         public ActiviteForumController(
             ActiviteBusinessService activiteBusinessService,
             ActiviteForumBusinessService ForumBusinessService,
             AgenceWilayaBusinessService agenceWilayaBusinessService,
-          
             UserService userService)
         {
             _activiteBusinessService = activiteBusinessService;
             _ForumBusinessService = ForumBusinessService;
             _agenceWilayaBusinessService = agenceWilayaBusinessService;
-             
             _userService = userService;
         }
 
@@ -43,10 +41,8 @@ namespace Anade.Khadamat.Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            
             return View();
         }
-       
 
         // POST: create
         [HttpPost]
@@ -58,7 +54,6 @@ namespace Anade.Khadamat.Web.Controllers
 
             var user = _userService.GetUserEagerLoadedAsync(User).Result;
             var structure = _userService.GetStructureFromUserAsync(user.Id).Result;
-
             var activite = new Activite
             {
                 StructureId = structure.Id,
@@ -82,12 +77,10 @@ namespace Anade.Khadamat.Web.Controllers
                 TempData["Message"] = resultActivite.ToBootstrapAlerts();
                 return View(model);
             }
-
             var Forum = new ActiviteForum
             {
                 ActiviteId = activite.Id
             };
-
             var resultForum = _ForumBusinessService.Add(Forum);
             if (!resultForum.Succeeded)
             {
@@ -133,7 +126,6 @@ namespace Anade.Khadamat.Web.Controllers
 
             ViewBag.ForumId = id;
             ViewBag.ActiviteId = Forum.ActiviteId;
-
             return View(model);
         }
 
@@ -193,7 +185,6 @@ namespace Anade.Khadamat.Web.Controllers
                 TempData["Error"] = resultForum.Messages.First().Message;
                 return RedirectToAction(nameof(Index));
             }
-
             // Supprimer l'activité liée si nécessaire
             if (Forum.Activite != null)
             {

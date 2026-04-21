@@ -1,5 +1,11 @@
 @model List<Anade.Khadamat.Domain.Entity.MoisCloture>
 
+@using Anade.Khadamat.Identity
+
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<User> SignInManager
+
 @{
     ViewData["Title"] = "إدارة الأشهر";
     var currentYear = DateTime.Now.Year;
@@ -97,7 +103,7 @@
             <div class="col-md-4">
                 <label class="form-label text-white opacity-75 small fw-600">السنة</label>
                 <select name="annee" class="form-select border-0 shadow-sm">
-                    @for (int y = currentYear + 1; y >= currentYear - 3; y--)
+                    @for (int y = currentYear + 2; y >= currentYear - 3; y--)
                     {
                         <option value="@y" selected="@(y == currentYear ? "selected" : null)">@y</option>
                     }
@@ -233,27 +239,88 @@
                     <div class="card-footer bg-transparent border-top py-2 px-3">
                         @if (!item.IsCloture)
                         {
-                            <form asp-controller="MoisCloture" asp-action="Cloturer" method="post">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="annee" value="@item.Annee" />
-                                <input type="hidden" name="mois" value="@item.Mois" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger w-100 rounded-pill"
-                                        onclick="return confirm('تأكيد إغلاق @item.MoisLabel ؟')">
-                                    <i class="bi bi-lock-fill me-1"></i>إغلاق
-                                </button>
-                            </form>
+
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                @if (User.IsInRole("CommunicationDG"))
+                                {
+                                    <form asp-controller="MoisCloture" asp-action="Cloturer" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="annee" value="@item.Annee" />
+                                        <input type="hidden" name="mois" value="@item.Mois" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger w-100 rounded-pill"
+                                                onclick="return confirm('تأكيد إغلاق @item.MoisLabel ؟')">
+                                            <i class="bi bi-lock-fill me-1"></i>إغلاق
+                                        </button>
+                                    </form>
+                                   
+                                }
+
+
+                            }
+                            else if (User.IsInRole("Admin"))
+                            {
+                                <form asp-controller="MoisCloture" asp-action="Cloturer" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="annee" value="@item.Annee" />
+                                    <input type="hidden" name="mois" value="@item.Mois" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger w-100 rounded-pill"
+                                            onclick="return confirm('تأكيد إغلاق @item.MoisLabel ؟')">
+                                        <i class="bi bi-lock-fill me-1"></i>إغلاق
+                                    </button>
+                                </form>
+
+                            }
+                            else
+                            {
+                               
+                            }
+
+
+
+
+                          
                         }
                         else
                         {
-                            <form asp-controller="MoisCloture" asp-action="Reouvrir" method="post">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="annee" value="@item.Annee" />
-                                <input type="hidden" name="mois" value="@item.Mois" />
-                                <button type="submit" class="btn btn-sm btn-outline-warning w-100 rounded-pill"
-                                        onclick="return confirm('تأكيد إعادة فتح @item.MoisLabel ؟')">
-                                    <i class="bi bi-arrow-counterclockwise me-1"></i>إعادة فتح
-                                </button>
-                            </form>
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                @if (User.IsInRole("CommunicationDG"))
+                                {
+                                    <form asp-controller="MoisCloture" asp-action="Reouvrir" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="annee" value="@item.Annee" />
+                                        <input type="hidden" name="mois" value="@item.Mois" />
+                                        <button type="submit" class="btn btn-sm btn-outline-warning w-100 rounded-pill"
+                                                onclick="return confirm('تأكيد إعادة فتح @item.MoisLabel ؟')">
+                                            <i class="bi bi-arrow-counterclockwise me-1"></i>إعادة فتح
+                                        </button>
+                                    </form>
+
+                                }
+
+
+                            }
+                            else if (User.IsInRole("Admin"))
+                            {
+                                <form asp-controller="MoisCloture" asp-action="Reouvrir" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="annee" value="@item.Annee" />
+                                    <input type="hidden" name="mois" value="@item.Mois" />
+                                    <button type="submit" class="btn btn-sm btn-outline-warning w-100 rounded-pill"
+                                            onclick="return confirm('تأكيد إعادة فتح @item.MoisLabel ؟')">
+                                        <i class="bi bi-arrow-counterclockwise me-1"></i>إعادة فتح
+                                    </button>
+                                </form>
+
+                            }
+                            else
+                            {
+
+                            }
+
+
+ 
                         }
                     </div>
 

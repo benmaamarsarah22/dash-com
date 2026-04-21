@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Anade.Khadamat.Web.Controllers
 {
+    [Authorize(Roles = "CommunicationDG,CommunicationAG")]
     public class ActiviteJourneeInfoController : Controller
     {
         private readonly ActiviteBusinessService _activiteBusinessService;
@@ -266,8 +267,8 @@ namespace Anade.Khadamat.Web.Controllers
             {
                 if (structure.Designation == "DG")
                 {
-                    var result = _journeeBusinessService.GetAllFilteredPaged(
-                        x => true,
+                    var result = _journeeBusinessService.GetAllPaged(
+                        
                         orderBy, startRowIndex, maxRows,
                         _journeeBusinessService.GetDefaultLoadProperties());
 
