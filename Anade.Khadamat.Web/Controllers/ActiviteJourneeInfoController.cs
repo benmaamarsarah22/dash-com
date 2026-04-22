@@ -160,10 +160,10 @@ namespace Anade.Khadamat.Web.Controllers
             var result = _activiteBusinessService.Update(activite);
             if (!result.Succeeded)
             {
-                TempData["Message"] = result.ToBootstrapAlerts();
+                ViewData["Message"] = result.ToBootstrapAlerts();
                 return View(model);
             }
-            ViewData["Message"] = result.ToBootstrapAlerts();
+            TempData["Message"] = result.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 

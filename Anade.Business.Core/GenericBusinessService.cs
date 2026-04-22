@@ -27,7 +27,7 @@ namespace Anade.Business.Core
                 OnAdding(entity);
                 _repository.Add(entity);
                 if (_unitOfWork.SaveChanges() == 0)
-                    throw new DataNotUpdatedException("Opération non enregsitrée !");
+                    throw new DataNotUpdatedException("! لم يتم تسجيل العملية");
                 OnAdded(entity);
                 businessResult = BusinessResult.Success;
             }
@@ -44,7 +44,7 @@ namespace Anade.Business.Core
             catch(Exception)
             {
                 businessResult = new BusinessResult();
-                businessResult.Messages.Add(new MessageResult { Message = "Un erreur s'est produite réessayez, si cela persiste contactez votre administrateur ", MessageType = MessageType.Warning });
+                businessResult.Messages.Add(new MessageResult { Message = "حدث خطأ، يرجى المحاولة مرة أخرى. إذا استمرت المشكلة، يرجى الاتصال بمسؤول النظام. ", MessageType = MessageType.Warning });
             }
 
             return businessResult;
@@ -69,7 +69,7 @@ namespace Anade.Business.Core
                 OnDeleting(entity);
                 _repository.Delete(entity);
                 if (_unitOfWork.SaveChanges() == 0)
-                    throw new DataNotUpdatedException("Opération non enregsitrée !");
+                    throw new DataNotUpdatedException("! لم يتم تسجيل العملية");
                 OnDeleted(entity);
                 businessResult = BusinessResult.Success;
             }
@@ -86,7 +86,7 @@ namespace Anade.Business.Core
             catch (Exception)
             {
                 businessResult = new BusinessResult();
-                businessResult.Messages.Add(new MessageResult { Message = "Un erreur s'est produite réessayez, si cela persiste contactez votre administrateur ", MessageType = MessageType.Warning });
+                businessResult.Messages.Add(new MessageResult { Message = "حدث خطأ، يرجى المحاولة مرة أخرى. إذا استمرت المشكلة، يرجى الاتصال بمسؤول النظام. ", MessageType = MessageType.Warning });
             }
 
             return businessResult;
@@ -150,7 +150,7 @@ namespace Anade.Business.Core
                 OnUpdating(entity);
                 _repository.Update(entity);
                 if (_unitOfWork.SaveChanges() == 0)
-                    throw new DataNotUpdatedException("Opération non enregsitrée !");
+                    throw new DataNotUpdatedException("! لم يتم تسجيل العملية");
                 OnUpdated(entity);
                 businessResult = BusinessResult.Success;
             }
@@ -167,7 +167,7 @@ namespace Anade.Business.Core
             catch (Exception)
             {
                 businessResult = new BusinessResult();
-                businessResult.Messages.Add(new MessageResult { Message = "Un erreur s'est produite réessayez, si cela persiste contactez votre administrateur ", MessageType = MessageType.Warning });
+                businessResult.Messages.Add(new MessageResult { Message = "حدث خطأ، يرجى المحاولة مرة أخرى. إذا استمرت المشكلة، يرجى الاتصال بمسؤول النظام.", MessageType = MessageType.Warning });
             }
 
             return businessResult;

@@ -133,7 +133,7 @@
     <value>Opération non enregsitrée !</value>
   </data>
   <data name="OperationSuccess" xml:space="preserve">
-    <value>Opération effectuée avec succès.</value>
+    <value>لقد تمّت العملية بنجاح.</value>
   </data>
   <data name="Une session ayant le même N° existe déja!" xml:space="preserve">
     <value>Une session ayant le même N° existe déja!</value>
