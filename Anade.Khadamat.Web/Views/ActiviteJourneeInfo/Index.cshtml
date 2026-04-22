@@ -7,164 +7,67 @@
 
 @section head {
     <partial name="_datatables.style" />
+   
 }
 
-<style>
-    .act-form-page {
-        background: linear-gradient(160deg,#eef2ff 0%,#f8f9fa 60%);
-        min-height: calc(100vh - 64px);
-    }
+<div class="af-page" dir="rtl">
 
-    .act-form-card {
-        border-radius: 18px;
-        overflow: hidden;
-        border: none;
-    }
-
-    .act-form-header {
-        background: linear-gradient(135deg,#4e57d4 0%,#6a76ef 100%);
-        padding: 1.75rem 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .act-form-header-left {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .act-form-header-icon {
-        width: 50px;
-        height: 50px;
-        background: rgba(255,255,255,.18);
-        border-radius: 13px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.35rem;
-        color: #fff;
-        flex-shrink: 0;
-    }
-
-    .act-form-header-title {
-        color: #fff;
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin: 0;
-        line-height: 1.25;
-    }
-
-    .act-form-header-sub {
-        color: rgba(255,255,255,.68);
-        font-size: .78rem;
-        margin: .15rem 0 0;
-    }
-
-    .btn-add {
-        background: rgba(255,255,255,.2);
-        border: 1.5px solid rgba(255,255,255,.45);
-        border-radius: 10px;
-        color: #fff;
-        padding: .5rem 1.25rem;
-        font-weight: 600;
-        font-size: .85rem;
-        display: flex;
-        align-items: center;
-        gap: .5rem;
-        transition: background .2s;
-        text-decoration: none;
-    }
-
-        .btn-add:hover {
-            background: rgba(255,255,255,.32);
-            color: #fff;
-        }
-
-    .act-section-divider {
-        font-size: .68rem;
-        font-weight: 700;
-        letter-spacing: .9px;
-        color: #9099b5;
-        padding-bottom: .45rem;
-        border-bottom: 1.5px solid #eaecf4;
-        margin: 0 0 1.1rem;
-    }
-
-    .dt-buttons {
-        margin-bottom: 10px;
-    }
-
-    #myTable thead th {
-        font-size: 1.1rem;
-        font-weight: 700;
-        letter-spacing: .4px;
-        color: #fff;
-        background-color: #4e57d4;
-        border-color: #5d67dc;
-    }
-
-    #myTable tbody tr {
-        font-size: 1.2rem;
-    }
-
-        #myTable tbody tr:hover {
-            background: #f0f2ff;
-        }
-
-    .btn-action {
-        border-radius: 8px;
-        padding: .3rem .6rem;
-        font-size: 1.2rem;
-    }
-
-    .m-custom-100 {
-        margin-inline: 100px !important; 
-    }
-</style>
-    
-<div class="act-form-page py-2 m-custom-100" dir="rtl">
-    <div class="container-fluid px-1">
-
-        <div class="card shadow act-form-card">
-
-            <div class="act-form-header">
-                <div class="act-form-header-left">
-                    <div class="act-form-header-icon"><i class="bi bi-calendar-event"></i></div>
-                    <div>
-                        <p class="act-form-header-title">أيام إعلامية وأبواب مفتوحة</p>
-                        <p class="act-form-header-sub">قائمة جميع الأيام الإعلامية المسجلة</p>
-                    </div>
-                </div>
-                <a asp-controller="ActiviteJourneeInfo" asp-action="Create" class="btn-add">
-                    <i class="bi bi-plus-circle"></i> إضافة
-                </a>
+    <div class="af-page-header px-4 px-lg-5">
+        <div class="af-page-header-left">
+            <div class="af-header-icon">
+                <i class="bi bi-calendar-event"></i>
             </div>
+            <div>
+                <h1 class="af-header-title">أيام إعلامية وأبواب مفتوحة</h1>
+                <p class="af-header-sub">قائمة جميع الأيام الإعلامية والنشاطات المسجلة</p>
+                <nav class="af-breadcrumb">
+                    <a href="/"><i class="bi bi-house-fill"></i> الرئيسية</a>
+                    <span class="sep"><i class="bi bi-chevron-left"></i></span>
+                    <span style="color:rgba(255,255,255,.75)">أيام إعلامية وأبواب مفتوحة</span>
+                </nav>
+            </div>
+        </div>
+        <a asp-controller="ActiviteJourneeInfo" asp-action="Create" class="btn-af-add">
+            <i class="bi bi-plus-circle-fill"></i>
+            إضافة نشاط جديد
+        </a>
+    </div>
 
+    <div class="container-fluid px-4 px-lg-5">
+
+        <div class="af-card">
             <div class="card-body p-4">
+
                 <partial name="_Message" />
 
-                <p class="act-section-divider">قائمة النشاطات</p>
+                <div class="af-section-wrap">
+                    <div class="py-2">
+                        <span class="text-primary fw-medium" style="font-size:.75rem;letter-spacing:.8px;text-transform:uppercase;">
+                            <i class="bi bi-list-ul me-1"></i>
+                        </span>
+                        <span class="af-section-title">قائمة الأيام الإعلامية</span>
+                    </div>
+                </div>
 
-                <div class="table-responsive mt-2">
-                    <table class="table table-hover table-striped align-middle table-bordered rounded-3" id="myTable">
+                <div class="table">
+                    <table class="table table-hover table-bordered tableDashboard align-middle w-100" id="myTable">
                         <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>الهيئة</th>
-                                <th>موضوع النشاط</th>
-                                <th>مكان النشاط</th>
-                                <th>التاريخ</th>
-                                <th>المنظمون</th>
-                                <th>المشاركون</th>
-                                <th>عدد الزوار</th>
-                                <th>إجراءات</th>
+                                <th><i class="bi bi-building ms-1"></i> الهيئة</th>
+                                <th><i class="bi bi-chat-square-text ms-1"></i> موضوع النشاط</th>
+                                <th><i class="bi bi-geo-alt ms-1"></i> مكان النشاط</th>
+                                <th><i class="bi bi-calendar3 ms-1"></i> التاريخ</th>
+                                <th><i class="bi bi-person-badge ms-1"></i> المنظمون</th>
+                                <th><i class="bi bi-people ms-1"></i> المشاركون</th>
+                                <th><i class="bi bi-eye ms-1"></i> عدد الزوار</th>
+                                <th><i class="bi bi-sliders ms-1"></i> إجراءات</th>
                             </tr>
                         </thead>
                         <tbody class="table-group-divider"></tbody>
                     </table>
                 </div>
+
             </div>
         </div>
 
@@ -177,9 +80,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function () {
+
             $('#myTable').DataTable({
                 processing: true,
                 serverSide: true,
+                order: [[0, "desc"]],
                 lengthMenu: [[10, 20, 50, 9999], [10, 20, 50, "الكل"]],
                 ajax: {
                     url: "/ActiviteJourneeInfo/journeeDataTable",
@@ -187,34 +92,83 @@
                 },
                 columns: [
                     { data: "id", visible: false, searchable: false },
-                    { data: "activite.agenceWilaya.designationAr" },
-                    { data: "activite.sujet" },
-                    { data: "activite.lieu" },
+                    {
+                        data: "activite.agenceWilaya.designationAr",
+                        render: function (data) {
+                            return `<span class="fw-medium">${data ?? ''}</span>`;
+                        }
+                    },
+                    {
+                        data: "activite.sujet",
+                        render: function (data) {
+                            return `<span class="fw-semi-bold text-dark">${data ?? ''}</span>`;
+                        }
+                    },
+                    {
+                        data: "activite.lieu",
+                        render: function (data) {
+                            return `<span class="text-muted">
+                                        <i class="bi bi-geo-alt-fill me-1" style="color:var(--primary)"></i>${data ?? ''}
+                                    </span>`;
+                        }
+                    },
                     {
                         data: "activite.dateActivite",
-                        render: function (data) { return moment(data).format('DD/MM/YYYY'); }
+                        render: function (data) {
+                            return `<span class="date-badge">
+                                        <i class="bi bi-calendar3"></i>
+                                        ${moment(data).format('DD/MM/YYYY')}
+                                    </span>`;
+                        }
                     },
-                    { data: "activite.organisateurs" },
-                    { data: "activite.participants" },
-                    { data: "activite.nombreVisiteurs" },
+                    {
+                        data: "activite.organisateurs",
+                        render: function (data) {
+                            return `<span class="info-pill">
+                                        <i class="bi bi-person-badge-fill"></i>${data ?? 0}
+                                    </span>`;
+                        }
+                    },
+                    {
+                        data: "activite.participants",
+                        render: function (data) {
+                            return `<span class="info-pill">
+                                        <i class="bi bi-people-fill"></i>${data ?? 0}
+                                    </span>`;
+                        }
+                    },
+                    {
+                        data: "activite.nombreVisiteurs",
+                        render: function (data) {
+                            return `<span class="visitor-count">
+                                        <i class="bi bi-eye-fill" style="color:var(--primary)"></i>
+                                        ${(data ?? 0).toLocaleString('ar-DZ')}
+                                    </span>`;
+                        }
+                    },
                     {
                         data: "id",
-                        sortable: false,
+                        orderable: false,
                         searchable: false,
                         render: function (data, type, row) {
                             return `
-                                <div class="d-flex gap-2">
-                                    <a href="/ActiviteJourneeInfo/Details/${row.id}" class="btn btn-outline-info btn-action" title="تفاصيل">
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <a href="/ActiviteJourneeInfo/Details/${row.id}"
+                                       class="btn-af-action btn-af-view"
+                                       data-bs-toggle="tooltip" title="تفاصيل">
                                         <i class="bi bi-eye-fill"></i>
                                     </a>
-                                    <a href="/ActiviteJourneeInfo/Edit/${row.id}" class="btn btn-outline-secondary btn-action" title="تعديل">
+                                    <a href="/ActiviteJourneeInfo/Edit/${row.id}"
+                                       class="btn-af-action btn-af-edit"
+                                       data-bs-toggle="tooltip" title="تعديل">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="/ActiviteJourneeInfo/Delete/${row.id}" class="btn btn-outline-danger btn-action" title="حذف">
+                                    <a href="/ActiviteJourneeInfo/Delete/${row.id}"
+                                       class="btn-af-action btn-af-del"
+                                       data-bs-toggle="tooltip" title="حذف">
                                         <i class="bi bi-trash-fill"></i>
                                     </a>
-                                </div>
-                            `;
+                                </div>`;
                         }
                     }
                 ],
@@ -222,12 +176,12 @@
                     sProcessing: "جارٍ المعالجة...",
                     sSearch: "بحث&nbsp;:",
                     sLengthMenu: "عرض _MENU_ عنصر",
-                    sInfo: "عرض العنصر _START_ إلى _END_ من أصل _TOTAL_ عنصر",
-                    sInfoEmpty: "عرض العنصر 0 إلى 0 من أصل 0 عنصر",
-                    sInfoFiltered: "(تم التصفية من أصل _MAX_ عنصر)",
+                    sInfo: "عرض _START_ إلى _END_ من أصل _TOTAL_ عنصر",
+                    sInfoEmpty: "عرض 0 إلى 0 من أصل 0 عنصر",
+                    sInfoFiltered: "(مصفى من إجمالي _MAX_ عنصر)",
                     sLoadingRecords: "جارٍ التحميل...",
-                    sZeroRecords: "لم يتم العثور على عناصر مطابقة",
-                    sEmptyTable: "لا توجد بيانات متاحة في الجدول",
+                    sZeroRecords: "لم يتم العثور على نتائج",
+                    sEmptyTable: "لا توجد بيانات متاحة",
                     oPaginate: {
                         sFirst: "الأول",
                         sPrevious: "السابق",
@@ -239,16 +193,17 @@
                 buttons: [
                     {
                         extend: 'excelHtml5',
-                        text: ' تصدير إلى Excel',
+                        text: '<i class="bi bi-file-earmark-excel-fill me-1"></i> تصدير Excel',
                         title: 'قائمة_أيام_إعلامية',
                         className: 'btn btn-success btn-sm',
                         autoFilter: true,
-                        exportOptions: { columns: [1, 2, 3, 4, 5, 6] }
+                        exportOptions: { columns: [1, 2, 3, 4, 5, 6, 7] }
                     }
-                ]
+                ],
+                drawCallback: function () {
+                    $('[data-bs-toggle="tooltip"]').tooltip('dispose').tooltip();
+                }
             });
-
-            $('[data-bs-toggle="tooltip"]').tooltip();
         });
     </script>
 }

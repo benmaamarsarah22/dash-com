@@ -1,0 +1,463 @@
+﻿
+.af-page {
+    background: var(--light);
+    min-height: calc(100vh - 75px);
+  /*  padding: 2.5rem 0 3.5rem;*/
+    font-family: 'Noto Kufi Arabic', sans-serif;
+}
+
+.af-page-header {
+    background: var(--dark);
+    border-radius: 0 0 20px 20px;
+    padding: 1.8rem 2.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    box-shadow: 0 6px 28px rgba(6, 187, 204, .18);
+}
+
+.af-page-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+}
+
+
+.af-header-icon {
+    width: 54px;
+    height: 54px;
+    background: var(--primary);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.45rem;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(6, 187, 204, .4);
+    transition: .5s;
+}
+
+    .af-header-icon:hover {
+        transform: scale(1.08);
+    }
+
+.af-header-title {
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.af-header-sub {
+    color: rgba(255, 255, 255, .5);
+    font-size: .78rem;
+    margin: .2rem 0 0;
+    font-weight: 600;
+}
+
+
+.af-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    font-size: .76rem;
+    color: rgba(255, 255, 255, .45);
+    flex-wrap: wrap;
+    margin-top: .35rem;
+}
+
+    .af-breadcrumb a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: .3s;
+    }
+
+        .af-breadcrumb a:hover {
+            color: #fff;
+        }
+
+    .af-breadcrumb .sep {
+        font-size: .6rem;
+        opacity: .5;
+    }
+
+/* Bouton Ajouter (reprend .btn.btn-primary du template) */
+.btn-af-add {
+    background: var(--primary);
+    color: #fff !important;
+    border: none;
+    border-radius: 6px;
+    padding: .6rem 1.5rem;
+    font-weight: 700;
+    font-size: .88rem;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    text-decoration: none;
+    transition: .5s;
+    box-shadow: 0 4px 16px rgba(6, 187, 204, .35);
+    white-space: nowrap;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+}
+
+    .btn-af-add:hover {
+        background: #04a0af;
+        color: #fff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(6, 187, 204, .45);
+    }
+
+/* ── Stats – reprend le style .service-item du template ── */
+.af-stat-item {
+    background: var(--light); /* identique à .service-item */
+    border-radius: 10px;
+    padding: 1.3rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: .5s; /* identique à .service-item */
+    border: none;
+}
+
+    .af-stat-item:hover {
+        margin-top: -6px; /* inspiré de .service-item:hover */
+        background: var(--primary); /* identique à .service-item:hover */
+        box-shadow: 0 8px 28px rgba(6, 187, 204, .25);
+    }
+
+    .af-stat-item * {
+        transition: .5s;
+    }
+    /* identique à .service-item * */
+
+    .af-stat-item:hover * {
+        color: #fff !important;
+    }
+/* identique à .service-item:hover * */
+
+/* Reprend .btn-lg-square du template pour l'icône */
+.af-stat-icon {
+    width: 48px;
+    height: 48px;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.af-stat-label {
+    font-size: .72rem;
+    color: #7a8299;
+    font-weight: 600; /* .fw-medium */
+    letter-spacing: .5px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.af-stat-value {
+    font-size: 1.55rem;
+    font-weight: 700; /* .fw-semi-bold */
+    color: var(--dark);
+    line-height: 1;
+    margin: 0;
+}
+
+/* ── Card principale ── */
+.af-card {
+    background: #fff;
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, .07);
+    overflow: hidden;
+}
+
+/* ── Section title (reprend .section-title du template) ── */
+.af-section-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+
+/* Reprend exactement .section-title du template */
+.af-section-title {
+    position: relative;
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: .82rem;
+    font-weight: 700; /* .fw-semi-bold */
+    color: var(--dark);
+    letter-spacing: .8px;
+    padding: 0 6px;
+}
+
+    .af-section-title::before {
+        position: absolute;
+        content: "";
+        width: calc(100% + 80px);
+        height: 2px;
+        top: 4px;
+        left: -40px;
+        background: var(--primary);
+        z-index: -1;
+    }
+
+    .af-section-title::after {
+        position: absolute;
+        content: "";
+        width: calc(100% + 120px);
+        height: 2px;
+        bottom: 5px;
+        left: -60px;
+        background: var(--primary);
+        z-index: -1;
+    }
+
+/* ── Tableau – reprend .tableDashboard du template ── */
+#myTable thead th {
+    background-color: #06BBCC; /* identique à .tableDashboard dans style.css */
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 600; /* .fw-medium */
+    padding: 12px;
+    text-align: center;
+    border-bottom: 2px solid #05A2B0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+    border-top: 2px solid #05A2B0;
+    border-left: 2px solid #05A2B0;
+    border-right: 2px solid #05A2B0;
+    white-space: nowrap;
+}
+
+#myTable tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
+    font-size: .88rem;
+    color: #555;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Hover (identique à .tableDashboard tbody tr:hover) */
+#myTable tbody tr:hover {
+    background-color: #B2EBF2 !important;
+}
+
+/* ── Date badge ── */
+.date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: var(--light);
+    color: var(--primary);
+    border-radius: 20px;
+    padding: .25rem .8rem;
+    font-size: .78rem;
+    font-weight: 700;
+    white-space: nowrap;
+    border: 1px solid rgba(6, 187, 204, .25);
+}
+
+/* ── Pill (organisateurs / participants) ── */
+.info-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    background: var(--light);
+    color: var(--primary);
+    border-radius: 20px;
+    padding: .22rem .7rem;
+    font-size: .78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid rgba(6, 187, 204, .2);
+}
+
+/* ── Visiteurs ── */
+.visitor-count {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-weight: 700;
+    color: var(--dark);
+    font-size: .9rem;
+}
+
+/* ── Boutons action – reprend .btn-sm-square du template ── */
+.btn-af-action {
+    width: 32px; /* identique à .btn-sm-square */
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .9rem;
+    border-radius: 6px;
+    font-weight: normal;
+    transition: .5s; /* identique au template */
+    text-decoration: none;
+}
+
+.btn-af-view {
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+
+    .btn-af-view:hover {
+        background: var(--primary);
+        color: #fff;
+    }
+
+.btn-af-edit {
+    border: 1.5px solid #6c757d;
+    color: #6c757d;
+    background: transparent;
+}
+
+    .btn-af-edit:hover {
+        background: #6c757d;
+        color: #fff;
+    }
+
+.btn-af-del {
+    border: 1.5px solid #dc3545;
+    color: #dc3545;
+    background: transparent;
+}
+
+    .btn-af-del:hover {
+        background: #dc3545;
+        color: #fff;
+    }
+
+/* ── DataTables overrides – cohérence avec --primary ── */
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    border: 1.5px solid #d0d7e3;
+    border-radius: 6px;
+    padding: .32rem .7rem;
+    font-size: .84rem;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    outline: none;
+    transition: .3s;
+}
+
+    .dataTables_wrapper .dataTables_filter input:focus,
+    .dataTables_wrapper .dataTables_length select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(6, 187, 204, .12);
+    }
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    background: var(--primary) !important;
+    color: #fff !important;
+    border-color: var(--primary) !important;
+    border-radius: 6px;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: var(--light) !important;
+    color: var(--dark) !important;
+    border-radius: 6px;
+}
+
+.dataTables_wrapper .dataTables_info {
+    font-size: .82rem;
+    color: #7a8299;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+}
+
+.dt-buttons .btn {
+    border-radius: 6px !important;
+    font-size: .82rem !important;
+    padding: .38rem 1rem !important;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+}
+
+/* ── Processing overlay (Positionné sous le header) ── */
+.dataTables_wrapper {
+    position: relative; /* Indispensable pour le positionnement absolu du loader */
+}
+
+.dataTables_processing {
+    position: absolute;
+    top: 130px !important; /* Ajustez cette valeur selon la hauteur de votre header */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1.5px solid var(--primary) !important;
+    border-radius: 8px !important;
+    color: var(--primary) !important;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 10px 20px !important;
+    margin: 0 !important;
+    width: auto !important;
+}
+
+/* ── Empty table message ── */
+.dataTables_empty {
+    color: #9099b5;
+    font-style: italic;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .af-page-header {
+        padding: 1.1rem 1.2rem;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .af-header-title {
+        font-size: .95rem;
+    }
+
+    .af-stat-value {
+        font-size: 1.25rem;
+    }
+}
+
+
+
+
+/*Create*/
+
+.af-form-input {
+    border: 1.5px solid #d0d7e3;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+    .af-form-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(6, 187, 204, 0.1);
+        outline: none;
+    }
+
+.form-label {
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.input-group-text {
+    border: 1.5px solid #d0d7e3;
+    border-radius: 0 8px 8px 0 !important;
+    color: var(--primary);
+}
