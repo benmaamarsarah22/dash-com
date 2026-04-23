@@ -1,152 +1,44 @@
-﻿@model Anade.Khadamat.Web.ViewModels.DashboardFilterVM
+﻿ 
+
+
+@model Anade.Khadamat.Web.ViewModels.DashboardFilterVM
 
 @{
     ViewData["Title"] = "Dashboard Activités";
+    ViewData["FullWidth"] = true;
 }
 
 @section head {
     <partial name="_datatables.style" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-
-    <style>
-        .act-form-page {
-            background: linear-gradient(160deg,#eef2ff 0%,#f8f9fa 60%);
-            min-height: calc(100vh - 64px);
-        }
-
-        .act-form-card {
-            border-radius: 18px;
-            overflow: hidden;
-            border: none;
-        }
-
-        .act-form-header {
-            background: linear-gradient(135deg,#4e57d4 0%,#6a76ef 100%);
-            padding: 1.75rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .act-form-header-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .act-form-header-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255,255,255,.18);
-            border-radius: 13px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.35rem;
-            color: #fff;
-        }
-
-        .act-form-header-title {
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .act-form-header-sub {
-            color: rgba(255,255,255,.68);
-            font-size: .78rem;
-            margin: .15rem 0 0;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.5;
-        }
-
-        .act-section-divider {
-            font-size: .68rem;
-            font-weight: 700;
-            letter-spacing: .9px;
-            color: #9099b5;
-            padding-bottom: .45rem;
-            border-bottom: 1.5px solid #eaecf4;
-            margin-bottom: 1rem;
-        }
-
-        #dashboardTable thead th {
-            background: #4e57d4;
-            color: #fff;
-            font-size: .95rem;
-            font-weight: 700;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        #dashboardTable tbody tr:hover {
-            background: #f0f2ff;
-        }
-
-        #dashboardTable tbody td {
-            text-align: center;
-            vertical-align: middle;
-            font-size: .95rem;
-        }
-
-        .btn-excel-custom {
-            background: #caf8f7 !important;
-            border-radius: 5px !important;
-            border: none !important;
-            margin: 5px !important;
-        }
-
-            .btn-excel-custom span {
-                color: #000 !important;
-            }
-
-        .btn-tasfiya {
-            background: #4e57d4 !important;
-            border-radius: 5px !important;
-            transition: 0.2s ease-in-out;
-            color: white;
-            border: 2px solid #fff !important;
-        }
-
-            .btn-tasfiya:hover {
-                background: #fff !important;
-                color: #4e57d4 !important;
-                border: 2px solid #4e57d4 !important;
-            }
-
-        .rounded-2 {
-            border-radius: 5px !important;
-        }
-    </style>
 }
 
-<div class="act-form-page py-3" dir="rtl">
-    <div class="container-fluid px-1">
-        <div class="card shadow act-form-card">
+<div class="af-page" dir="rtl">
 
-            <!-- HEADER -->
-            <div class="act-form-header">
-                <div class="act-form-header-left">
-                    <div class="act-form-header-icon">
-                        <i class="bi bi-bar-chart-line-fill"></i>
-                    </div>
-                    <div>
-                        <p class="act-form-header-title">حصيلة نشاطات الإتصال</p>
-                        <p class="act-form-header-sub">الوكالات الولائية حسب الفترة الزمنية</p>
-                    </div>
-                </div>
+    <!-- HEADER — même structure que ActiviteJourneeInfo -->
+    <div class="af-page-header px-4 px-lg-5">
+        <div class="af-page-header-left">
+            <div class="af-header-icon">
+                <i class="bi bi-bar-chart-line-fill"></i>
             </div>
+            <div>
+                <h1 class="af-header-title">حصيلة نشاطات الإتصال</h1>
+                <p class="af-header-sub">الوكالات الولائية حسب الفترة الزمنية</p>
+                <nav class="af-breadcrumb">
+                    <a href="/"><i class="bi bi-house-fill"></i> الرئيسية</a>
+                    <span class="sep"><i class="bi bi-chevron-left"></i></span>
+                    <span style="color:rgba(255,255,255,.75)">حصيلة نشاطات الإتصال</span>
+                </nav>
+            </div>
+        </div>
+    </div>
 
+    <div class=" ">
+        <div class="af-card">
             <div class="card-body p-4">
 
                 <!-- FILTER -->
-                <form method="get" class="row mb-3 align-items-end g-2">
+                <form method="get" class="row mb-4 align-items-end g-2">
                     <div class="col-md-3">
                         <label class="form-label text-muted" style="font-size:.8rem;font-weight:600;">
                             من تاريخ
@@ -168,7 +60,7 @@
                     </div>
 
                     <div class="col-md-3 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100 rounded-2 btn-tasfiya">
+                        <button type="submit" class="btn btn-primary w-100 rounded-2">
                             <i class="bi bi-funnel-fill me-1"></i> تصفية
                         </button>
                     </div>
@@ -185,11 +77,19 @@
                     }
                 </form>
 
-                <p class="act-section-divider">النتائج</p>
+                <!-- Section title — même style af-section-wrap -->
+                <div class="af-section-wrap">
+                    <div class="py-2">
+                        <span class="text-primary fw-medium" style="font-size:.75rem;letter-spacing:.8px;">
+                            <i class="bi bi-list-ul me-1"></i>
+                        </span>
+                        <span class="af-section-title">النتائج</span>
+                    </div>
+                </div>
 
-                <!-- ✅ TABLE : tfoot INSIDE table, BEFORE closing </div> -->
-                <div class="table-responsive">
-                    <table id="dashboardTable" class="table table-bordered table-striped">
+                <!-- TABLE -->
+                <div class="table">
+                    <table id="dashboardTable" class="table table-hover table-bordered tableDashboard align-middle w-100">
                         <thead>
                             <tr>
                                 <th>الولاية</th>
@@ -222,7 +122,7 @@
                                             }
                                         }
                                     </td>
-                                    <td>@item.StructureDesignation</td>
+                                    <td><span class="fw-medium">@item.StructureDesignation</span></td>
                                     <td>@item.JourneeInfoCount</td>
                                     <td>@item.SalonCount</td>
                                     <td>@item.ForumCount</td>
@@ -235,7 +135,6 @@
                             }
                         </tbody>
 
-                        <!-- ✅ tfoot INSIDE <table>, BEFORE </table> -->
                         <tfoot class="table-dark">
                             <tr>
                                 <th colspan="2">الإجمالي</th>
@@ -249,10 +148,8 @@
                                 <th>@Model.Data.Sum(x => x.Total)</th>
                             </tr>
                         </tfoot>
-
                     </table>
                 </div>
-                <!-- ✅ </div> fermé APRÈS </table> -->
 
             </div>
         </div>
@@ -268,7 +165,6 @@
     <script>
         $(document).ready(function () {
 
-            // ✅ Variables dateDebut / dateFin (plus de mois/annee)
             var dateDebut = '@(Model.DateDebut.HasValue? Model.DateDebut.Value.ToString("yyyy-MM-dd") : "")';
             var dateFin   = '@(Model.DateFin.HasValue? Model.DateFin.Value.ToString("yyyy-MM-dd")   : "")';
 
@@ -277,7 +173,6 @@
                 titreExcel += ' - من ' + (dateDebut || '...') + ' إلى ' + (dateFin || '...');
             }
 
-            // ✅ Nom du fichier Excel
             var filename = 'حصيلة نشاطات الإتصال_'
                          + (dateDebut || 'بداية') + '_إلى_' + (dateFin || 'نهاية');
 
@@ -286,10 +181,10 @@
                 buttons: [
                     {
                         extend: 'excelHtml5',
-                        text: 'تصدير إلى Excel',
+                        text: '<i class="bi bi-file-earmark-excel-fill me-1"></i> تصدير Excel',
                         title: null,
                         messageTop: titreExcel,
-                        className: 'btn-excel-custom',
+                        className: 'btn btn-success btn-sm',
                         filename: filename,
                         exportOptions: { columns: ':visible' }
                     }

@@ -8,10 +8,35 @@
 
 @{
     ViewData["Title"] = "إدارة الأشهر";
+    ViewData["FullWidth"] = true;
     var currentYear = DateTime.Now.Year;
     var currentMonth = DateTime.Now.Month;
 }
 
+ 
+ 
+
+<div class="af-page" dir="rtl">
+
+    <!-- HEADER -->
+    <div class="af-page-header px-4 px-lg-5">
+        <div class="af-page-header-left">
+            <div class="af-header-icon">
+                <i class="bi bi-calendar3"></i>
+            </div>
+            <div>
+                <h1 class="af-header-title">إدارة الأشهر</h1>
+                <p class="af-header-sub">فتح وإغلاق الأشهر وإدارة دورة الإدخال</p>
+                <nav class="af-breadcrumb">
+                    <a href="/"><i class="bi bi-house-fill"></i> الرئيسية</a>
+                    <span class="sep"><i class="bi bi-chevron-left"></i></span>
+                    <span style="color:rgba(255,255,255,.75)">إدارة الأشهر</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+</div>
 @section head {
     <style>
         /* ─── Card ring animation ─── */
