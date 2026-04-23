@@ -11,6 +11,32 @@
 @section head {
     <partial name="_datatables.style" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+
+
+    <style>
+    .search-header {
+        transition: all 0.3s ease;
+        border: 1px solid #f0f0f0 !important;
+    }
+
+    .custom-input {
+        background-color: #f8f9fa;
+        font-size: 0.95rem;
+    }
+
+    .custom-input:focus {
+        background-color: #fff;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1) !important;
+    }
+
+   
+    /* Support RTL pour les icônes si nécessaire */
+    [dir="rtl"] .me-2 { margin-left: 0.5rem !important; margin-right: 0 !important; }
+</style>
+
+
+
 }
 
 <div class="af-page" dir="rtl">
@@ -37,45 +63,45 @@
         <div class="af-card">
             <div class="card-body p-4">
 
-                <!-- FILTER -->
-                <form method="get" class="row mb-4 align-items-end g-2">
-                    <div class="col-md-3">
-                        <label class="form-label text-muted" style="font-size:.8rem;font-weight:600;">
-                            من تاريخ
-                        </label>
-                        <input type="date"
-                               name="dateDebut"
-                               class="form-control rounded-2"
-                               value="@(Model.DateDebut.HasValue? Model.DateDebut.Value.ToString("yyyy-MM-dd") : "")" />
-                    </div>
+   <div class="search-header bg-white p-4 rounded-4 shadow-sm border-0 mb-4">
 
-                    <div class="col-md-3">
-                        <label class="form-label text-muted" style="font-size:.8rem;font-weight:600;">
-                            إلى تاريخ
-                        </label>
-                        <input type="date"
-                               name="dateFin"
-                               class="form-control rounded-2"
-                               value="@(Model.DateFin.HasValue? Model.DateFin.Value.ToString("yyyy-MM-dd") : "")" />
-                    </div>
 
-                    <div class="col-md-3 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100 rounded-2">
-                            <i class="bi bi-funnel-fill me-1"></i> تصفية
-                        </button>
-                    </div>
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-md-4 col-lg-3">
+            <label class="form-label small fw-bold text-uppercase text-muted mb-1">
+                <i class="bi bi-calendar-event me-1"></i> من تاريخ
+            </label>
+            <input type="date"
+                   name="dateDebut"
+                   class="form-control form-control-lg border-light-subtle rounded-3 shadow-none custom-input"
+                   value="@(Model.DateDebut.HasValue ? Model.DateDebut.Value.ToString("yyyy-MM-dd") : "")" />
+        </div>
 
-                    @if (Model.DateDebut.HasValue || Model.DateFin.HasValue)
-                    {
-                        <div class="col-md-3 d-flex align-items-end">
-                            <a href="@Url.Action("Index", "Dashboard")"
-                               class="btn w-100 rounded-2"
-                               style="background:#f0f2ff;color:#4e57d4;border:1.5px solid #4e57d4;font-weight:600;">
-                                <i class="bi bi-x-circle me-1"></i> إلغاء التصفية
-                            </a>
-                        </div>
-                    }
-                </form>
+        <div class="col-md-4 col-lg-3">
+            <label class="form-label small fw-bold text-uppercase text-muted mb-1">
+                <i class="bi bi-calendar-check me-1"></i> إلى تاريخ
+            </label>
+            <input type="date"
+                   name="dateFin"
+                   class="form-control form-control-lg border-light-subtle rounded-3 shadow-none custom-input"
+                   value="@(Model.DateFin.HasValue ? Model.DateFin.Value.ToString("yyyy-MM-dd") : "")" />
+        </div>
+
+        <div class="col-md-4 col-lg-6 d-flex gap-2 justify-content-start">
+            <button type="submit" class="btn btn-primary btn-lg px-4 rounded-3 shadow-sm d-flex align-items-center">
+                <i class="bi bi-funnel-fill me-2"></i> تصفية
+            </button>
+
+            @if (Model.DateDebut.HasValue || Model.DateFin.HasValue)
+            {
+                <a href="@Url.Action("Index", "Dashboard")"
+                   class="btn btn-outline-danger btn-lg px-4 rounded-3 d-flex align-items-center">
+                    <i class="bi bi-x-lg me-2"></i> إلغاء
+                </a>
+            }
+        </div>
+    </form>
+</div>
 
                 <!-- Section title — même style af-section-wrap -->
                 <div class="af-section-wrap">
