@@ -2,126 +2,106 @@
 
 @{
     ViewData["Title"] = "تفاصيل التغطية الصحفية";
+    ViewData["FullWidth"] = true;
 }
 
-<style>
-    .act-form-page { background: linear-gradient(160deg,#eef2ff 0%,#f8f9fa 60%); min-height: calc(100vh - 64px); }
-    .act-form-card { border-radius: 18px; overflow: hidden; border: none; }
-    .act-form-header { background: linear-gradient(135deg,#4e57d4 0%,#6a76ef 100%); padding: 1.75rem 2rem; display: flex; align-items: center; gap: 1rem; }
-    .act-form-header-icon { width: 50px; height: 50px; background: rgba(255,255,255,.18); border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; color: #fff; flex-shrink: 0; }
-    .act-form-header-title { color: #fff; font-size: 1.1rem; font-weight: 700; margin: 0; line-height: 1.25; }
-    .act-form-header-sub  { color: rgba(255,255,255,.68); font-size: .78rem; margin: .15rem 0 0; }
-    .act-section-divider { font-size: .68rem; font-weight: 700; letter-spacing: .9px; color: #9099b5; padding-bottom: .45rem; border-bottom: 1.5px solid #eaecf4; margin: 1.5rem 0 1.1rem; }
-    .act-detail-tile { background: #f8f9ff; border: 1px solid #e8ebf6; border-radius: 12px; padding: 1rem 1.2rem; }
-    .act-detail-tile .tile-label { font-size: .72rem; font-weight: 700; letter-spacing: .6px; color: #9099b5; margin-bottom: .3rem; }
-    .act-detail-tile .tile-value { font-size: .9rem; color: #2c3050; font-weight: 500; }
-    .btn-act-cancel { border-radius: 10px; font-size: .875rem; padding: .58rem 1.4rem; color: #6c757d; border-color: #d0d4df; }
-    .btn-act-cancel:hover { background: #f4f5fa; color: #444; border-color: #bcc0ce; }
-</style>
-
-<div class="act-form-page py-5" dir="rtl">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-6 col-md-9">
-                <div class="card shadow act-form-card">
-                    <div class="act-form-header">
-                        <div class="act-form-header-icon"><i class="bi bi-newspaper"></i></div>
-                        <div>
-                            <p class="act-form-header-title">تفاصيل التغطية الصحفية</p>
-                            <p class="act-form-header-sub">صحافة مكتوبة / إلكترونية</p>
-                        </div>
-                    </div>
-                    <div class="card-body p-4">
-                        <p class="act-section-divider">معلومات التغطية</p>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <div class="act-detail-tile">
-                                    <div class="tile-label">الصحيفة / الموقع الإلكتروني</div>
-                                    <div class="tile-value">@Model.Media</div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="act-detail-tile">
-                                    <div class="tile-label">الموضوع</div>
-                                    <div class="tile-value">@Model.Activite.Sujet</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="act-detail-tile">
-                                    <div class="tile-label">تاريخ النشر</div>
-                                    <div class="tile-value">@Model.Activite.DateActivite.ToString("dd/MM/yyyy")</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="act-detail-tile">
-                                    <div class="tile-label">الهيئة</div>
-                                    <div class="tile-value">@Model.Activite.AgenceWilaya.DesignationAr</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mt-4">
-                            <a asp-action="Index" class="btn btn-outline-secondary btn-act-cancel">رجوع</a>
-                        </div>
-                    </div>
-                </div>
+<div class="af-page" dir="rtl">
+    <div class="af-page-header px-4 px-lg-5">
+        <div class="af-page-header-left">
+            <div class="af-header-icon">
+                <i class="bi bi-newspaper"></i>
+            </div>
+            <div>
+                <h1 class="af-header-title">تفاصيل التغطية الصحفية</h1>
+                <p class="af-header-sub">عرض كامل لبيانات الصحافة المكتوبة والإلكترونية المسجلة</p>
+                <nav class="af-breadcrumb">
+                    <a href="/"><i class="bi bi-house-fill"></i> الرئيسية</a>
+                    <span class="sep"><i class="bi bi-chevron-left"></i></span>
+                    <a asp-action="Index">تغطيات صحفية</a>
+                    <span class="sep"><i class="bi bi-chevron-left"></i></span>
+                    <span style="color:rgba(255,255,255,.75)">عرض التفاصيل</span>
+                </nav>
             </div>
         </div>
-    </div>
-</div>
-
-<div class="container mt-4" dir="rtl">
-
-    <div class="card shadow border-0 rounded-4">
-
-        <!-- Header -->
-        <div class="card-header bg-primary text-white text-center rounded-top-4">
-            <h4 class="mb-0">📄تتفاصيل الصحيفة / الموقع الإلكتروني</h4>
-        </div>
-
-        <!-- Body -->
-        <div class="card-body">
-
-            <div class="row g-3">
-
-                <div class="col-md-6">
-
-                    <div class="col-md-6">
-                        <div class="p-3 border rounded bg-light">
-                            <strong>📍 الصحيفة / الموقع الإلكتروني</strong>
-                            <div>@Model.Media</div>
-                        </div>
-                    </div>
-
-                    <div class="p-3 border rounded bg-light">
-                        <strong>📌 موضوع  </strong>
-                        <div>@Model.Activite.Sujet</div>
-                    </div>
-                </div>
-
-                 
-
-                <div class="col-md-6">
-                    <div class="p-3 border rounded bg-light">
-                        <strong>📅 التاريخ</strong>
-                        <div>@Model.Activite.DateActivite.ToString("dd/MM/yyyy")</div>
-                    </div>
-                </div>
-
- 
-
-
-            </div>
-
-        </div>
-
-        <!-- Button -->
-        <div class="text-start mt-4">
-            <a asp-action="Index" class="btn btn-outline-secondary px-4">
-                ⬅ رجوع
+        <div class="af-page-header-right">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-af-add">
+                <i class="bi bi-pencil-square me-1"></i> تعديل البيانات
             </a>
         </div>
-
     </div>
-</div>
 
+    <div class="container-fluid px-4 px-lg-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-9">
+
+                <div class="card af-card shadow-sm mb-5 border-0">
+                    <div class="card-body p-4 p-md-5">
+
+                 
+                        <div class="mb-4">
+                            <span class="af-section-title text-primary"><i class="bi bi-info-circle-fill me-2"></i>معلومات المقال / التغطية</span>
+                        </div>
+
+                        <div class="row g-4 mb-5">
+                            <div class="col-12">
+                                <div class="p-4 rounded-4" style="background: #f8faff; border-right: 5px solid var(--primary);">
+                                    <label class="text-muted small fw-bold mb-1"> الموضوع </label>
+                                    <h3 class="fw-bold mb-0 text-dark">@Model.Activite?.Sujet</h3>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center p-3 border rounded-3 bg-white h-100">
+                                    <div class="af-stat-icon bg-light text-primary me-3">
+                                        <i class="bi bi-journal-text"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">الصحيفة / الموقع الإلكتروني</div>
+                                        <div class="fw-bold">@Model.Media</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center p-3 border rounded-3 bg-white h-100">
+                                    <div class="af-stat-icon bg-light text-primary me-3">
+                                        <i class="bi bi-calendar-event-fill"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">تاريخ النشر</div>
+                                        <div class="fw-bold">@Model.Activite?.DateActivite.ToString("dd MMMM yyyy")</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                     
+                        <div class="mb-4 mt-5">
+                            <span class="af-section-title text-primary"><i class="bi bi-building me-2"></i>المؤسسة والجهة المعنية</span>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 bg-light rounded-4">
+                                    <div class="card-body">
+                                        <label class="text-muted small fw-bold mb-2 d-block">الهيئة / الوكالة الولائية</label>
+                                        <p class="mb-0 fw-bold text-dark">@Model.Activite?.AgenceWilaya?.DesignationAr</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr class="my-5 opacity-10">
+
+                        <div class="d-flex gap-3 justify-content-end">
+                            <a asp-action="Index" class="btn btn-secondary px-4 fw-bold rounded-3">
+                                <i class="bi bi-arrow-right-circle me-1"></i> العودة للقائمة
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -160,7 +160,7 @@ namespace Anade.Khadamat.Web.Controllers
                 TempData["Message"] = result.ToBootstrapAlerts();
                 return View(model);
             }
-            ViewData["Message"] = result.ToBootstrapAlerts();
+            TempData["Message"] = result.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -204,7 +204,7 @@ namespace Anade.Khadamat.Web.Controllers
 
                 TempData["Message"] = resultActivite.ToBootstrapAlerts();
             }
-
+     
             return RedirectToAction(nameof(Index));
         }
 

@@ -10,7 +10,7 @@ namespace Anade.Khadamat.Web.ViewModels
         public string StationRadio { get; set; }
 
         [StringLength(100)]
-        [Required(ErrorMessage = "المتداخلون اجباريون ")]
+        [Required(ErrorMessage = "المتداخلن اجباري")]
         public string Intervenants { get; set; }
 
         [Required(ErrorMessage = "التاريخ إجباري")]

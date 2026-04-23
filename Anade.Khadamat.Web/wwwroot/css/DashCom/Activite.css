@@ -243,6 +243,9 @@
 #myTable tbody td {
     padding: 12px;
     border-bottom: 1px solid #dee2e6;
+    border-top: 1px solid #dee2e6;
+    border-left: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
     font-size: .88rem;
     color: #555;
     text-align: center;
@@ -461,3 +464,16 @@
     border-radius: 0 8px 8px 0 !important;
     color: var(--primary);
 }
+
+/*details*/
+
+.af-stat-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.2rem;
+}
+ 

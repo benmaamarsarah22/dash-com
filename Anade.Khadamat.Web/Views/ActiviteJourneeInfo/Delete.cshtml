@@ -13,8 +13,8 @@
                 <i class="bi bi-pencil-square"></i>
             </div>
             <div>
-                <h1 class="af-header-title">تعديل يوم إعلامي</h1>
-                <p class="af-header-sub">تحديث بيانات النشاط المسجل في النظام</p>
+                <h1 class="af-header-title"> حذف يوم إعلامي</h1>
+                <p class="af-header-sub">حذف بيانات النشاط المسجل في النظام</p>
                 <nav class="af-breadcrumb">
                     <a href="/"><i class="bi bi-house-fill"></i> الرئيسية</a>
                     <span class="sep"><i class="bi bi-chevron-left"></i></span>
@@ -68,17 +68,21 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="text-muted small d-block mb-1">عدد المشاركين</label>
+                                <label class="text-muted small d-block mb-1"> عدد الزوار</label>
                                 <div class="p-2 border-bottom"><i class="bi bi-people me-2 text-primary"></i> @Model.Activite?.NombreVisiteurs</div>
                             </div>
 
+                            <div class="col-md-6">
+                                <label class="text-muted small d-block mb-1">الهيئة</label>
+                                <div class="p-2 border-bottom"><i class="bi bi-building me-2 text-primary"></i> @Model.Activite?.AgenceWilaya?.DesignationAr</div>
+                            </div>
                             <div class="col-12">
-                                <label class="text-muted small d-block mb-1">المنظمون</label>
+                                <label class="text-muted small d-block mb-1">المنظمين</label>
                                 <div class="p-2 border-bottom">@Model.Activite?.Organisateurs</div>
                             </div>
 
                             <div class="col-12">
-                                <label class="text-muted small d-block mb-1">المشاركون والمدعوون</label>
+                                <label class="text-muted small d-block mb-1">المشاركين </label>
                                 <div class="p-3 bg-light rounded-3" style="min-height: 60px;">@Model.Activite?.Participants</div>
                             </div>
                         </div>

@@ -9,7 +9,7 @@
    <div class="af-page-header px-4 px-lg-5">
         <div class="af-page-header-left">
             <div class="af-header-icon">
-                <i class="bi bi-pencil-square"></i>
+                <i class="bi bi-calendar-event"></i>
             </div>
             <div>
                 <h1 class="af-header-title">تفاصيل اليوم الإعلامي</h1>
@@ -38,7 +38,7 @@
                 <div class="card af-card shadow-sm mb-5 border-0">
                     <div class="card-body p-4 p-md-5">
                         
-                        @* القسم الأول: البيانات الأساسية *@
+       
                         <div class="mb-4">
                             <span class="af-section-title text-primary"><i class="bi bi-card-heading me-2"></i>البيانات الأساسية</span>
                         </div>
@@ -46,7 +46,7 @@
                         <div class="row g-4 mb-5">
                             <div class="col-12">
                                 <div class="p-4 rounded-4" style="background: #f8faff; border-right: 5px solid var(--primary);">
-                                    <label class="text-muted small fw-bold mb-1">موضوع النشاط</label>
+                                    <label class="text-muted small fw-bold mb-1"> الموضوع </label>
                                     <h3 class="fw-bold mb-0 text-dark">@Model.Activite?.Sujet</h3>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                                         <i class="bi bi-calendar-check-fill"></i>
                                     </div>
                                     <div>
-                                        <div class="text-muted small">التاريخ</div>
+                                        <div class="text-muted small">تاريخ النشاط</div>
                                         <div class="fw-bold">@Model.Activite?.DateActivite.ToString("dd MMMM yyyy")</div>
                                     </div>
                                 </div>
@@ -90,7 +90,7 @@
 
                         @* القسم الثاني: التنظيم *@
                         <div class="mb-4 mt-5">
-                            <span class="af-section-title text-primary"><i class="bi bi-building me-2"></i>المنظمون والمشاركون</span>
+                            <span class="af-section-title text-primary"><i class="bi bi-building me-2"></i>المنظمين والمشاركين</span>
                         </div>
 
                         <div class="row g-4 mb-4">
@@ -105,7 +105,7 @@
                             <div class="col-md-6">
                                 <div class="card h-100 border-0 bg-light rounded-4">
                                     <div class="card-body">
-                                        <label class="text-muted small fw-bold mb-2 d-block">الهيئة / الوكالة</label>
+                                        <label class="text-muted small fw-bold mb-2 d-block">الهيئة  </label>
                                         <p class="mb-0 fw-bold text-dark">@Model.Activite?.AgenceWilaya?.DesignationAr</p>
                                     </div>
                                 </div>
@@ -113,7 +113,7 @@
                             <div class="col-12">
                                 <div class="card border-0 bg-light rounded-4">
                                     <div class="card-body p-4">
-                                        <label class="text-muted small fw-bold mb-2 d-block">قائمة المشاركين والمدعوين</label>
+                                        <label class="text-muted small fw-bold mb-2 d-block">قائمة المشاركين  </label>
                                         <div class="p-3 bg-white rounded-3 border" style="min-height: 100px; white-space: pre-line;">
                                             @Model.Activite?.Participants
                                         </div>
@@ -136,21 +136,5 @@
     </div>
 </div>
 
-<style>
-    /* لمسة إضافية لزر التعديل في الهيدر */
-    .btn-white-outline:hover {
-        background-color: rgba(255,255,255,0.1);
-        color: white !important;
-    }
-    
-    /* أيقونات الإحصائيات المصغرة */
-    .af-stat-icon {
-        width: 45px;
-        height: 45px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 10px;
-        font-size: 1.2rem;
-    }
-</style>
+
+ 

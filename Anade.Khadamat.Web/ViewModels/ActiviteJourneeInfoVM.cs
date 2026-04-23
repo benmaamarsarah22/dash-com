@@ -12,13 +12,15 @@ namespace Anade.Khadamat.Web.ViewModels
         [StringLength(50, ErrorMessage = "لا يمكن أن يتجاوز المكان 50 حرفاً")]
         public string Lieu { get; set; }
 
-        [Required(ErrorMessage = "المنظمون إجباري")]
-        [StringLength(200, ErrorMessage = "لا يمكن أن يتجاوز حقل المنظمين 200 حرف")]
+        [Required(ErrorMessage = "المنظمين إجباري")]
+        [StringLength(200, ErrorMessage = "لا يمكن أن يتجاوز حقل المنظمين  200 حرف")]
         public string Organisateurs { get; set; }
 
+        [Required(ErrorMessage = " المشاركين إجباري")]
         [StringLength(200, ErrorMessage = "لا يمكن أن يتجاوز حقل المشاركين 200 حرف")]
         public string Participants { get; set; }
 
+        [Required(ErrorMessage = "عدد الزوار إجباري")]
         [Range(0, int.MaxValue, ErrorMessage = "يجب أن يكون عدد الزوار رقماً موجباً")]
         public int? NombreVisiteurs { get; set; }
 
