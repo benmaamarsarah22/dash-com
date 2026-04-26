@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Anade.Khadamat.Web.Controllers
 {
-    [Authorize(Roles = "CommunicationDG,CommunicationAG")]
+    [Authorize]
     public class ActiviteJourneeInfoController : Controller
     {
         private readonly ActiviteBusinessService _activiteBusinessService;

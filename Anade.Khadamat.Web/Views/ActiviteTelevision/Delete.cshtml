@@ -2,199 +2,110 @@
 
 @{
     ViewData["Title"] = "حذف التغطية التلفزيونية";
+    ViewData["FullWidth"] = true;
 }
 
-<style>
-    .act-form-page {
-        background: linear-gradient(160deg,#eef2ff 0%,#f8f9fa 60%);
-        min-height: calc(100vh - 64px);
-    }
+<div class="af-page" dir="rtl">
 
-    .act-form-card {
-        border-radius: 18px;
-        overflow: hidden;
-        border: none;
-    }
+    <div class="af-page-header px-4 px-lg-5">
+        <div class="af-page-header-left">
+            <div class="af-header-icon">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+            <div>
+                <h1 class="af-header-title">حذف التغطية التلفزيونية</h1>
+                <p class="af-header-sub">حذف بيانات التغطية المسجلة في النظام</p>
+                <nav class="af-breadcrumb">
+                    <a href="/"><i class="bi bi-house-fill"></i> الرئيسية</a>
+                    <span class="sep"><i class="bi bi-chevron-left"></i></span>
+                    <a asp-controller="ActiviteTelevision" asp-action="Index">التغطيات التلفزيونية</a>
+                    <span class="sep"><i class="bi bi-chevron-left"></i></span>
+                    <span style="color:rgba(255,255,255,.75)">تأكيد الحذف</span>
+                </nav>
+            </div>
+        </div>
+    </div>
 
-    .act-form-header {
-        background: linear-gradient(135deg,#4e57d4 0%,#6a76ef 100%);
-        padding: 1.75rem 2rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .act-form-header-icon {
-        width: 50px;
-        height: 50px;
-        background: rgba(255,255,255,.18);
-        border-radius: 13px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.35rem;
-        color: #fff;
-        flex-shrink: 0;
-    }
-
-    .act-form-header-title {
-        color: #fff;
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin: 0;
-        line-height: 1.25;
-    }
-
-    .act-form-header-sub {
-        color: rgba(255,255,255,.68);
-        font-size: .78rem;
-        margin: .15rem 0 0;
-    }
-
-    .act-section-divider {
-        font-size: .68rem;
-        font-weight: 700;
-        letter-spacing: .9px;
-        color: #9099b5;
-        padding-bottom: .45rem;
-        border-bottom: 1.5px solid #eaecf4;
-        margin: 1.5rem 0 1.1rem;
-    }
-
-    .act-info-row {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 1rem;
-    }
-
-    .act-info-label {
-        font-size: .8rem;
-        font-weight: 600;
-        color: #4e5568;
-        margin-bottom: .28rem;
-    }
-
-    .act-info-value {
-        font-size: .875rem;
-        color: #2d3148;
-        background: #fafbff;
-        border: 1px solid #dde1ef;
-        border-radius: 10px;
-        padding: .52rem .85rem;
-    }
-
-    .alert-delete {
-        background: #fff5f5;
-        border: 1px solid #fcd0cc;
-        border-radius: 12px;
-        color: #b03a2e;
-        font-size: .85rem;
-        font-weight: 600;
-        padding: .75rem 1rem;
-        margin-bottom: 1.2rem;
-        display: flex;
-        align-items: center;
-        gap: .6rem;
-    }
-
-    .btn-act-delete {
-        background: linear-gradient(135deg,#e24b4a,#c03838);
-        border: none;
-        border-radius: 10px;
-        color: #fff;
-        padding: .58rem 2rem;
-        font-weight: 600;
-        font-size: .875rem;
-        transition: opacity .2s, transform .15s;
-    }
-
-        .btn-act-delete:hover {
-            opacity: .88;
-            transform: translateY(-1px);
-            color: #fff;
-        }
-
-    .btn-act-cancel {
-        border-radius: 10px;
-        font-size: .875rem;
-        padding: .58rem 1.4rem;
-        color: #6c757d;
-        border-color: #d0d4df;
-    }
-
-        .btn-act-cancel:hover {
-            background: #f4f5fa;
-            color: #444;
-            border-color: #bcc0ce;
-        }
-</style>
-
-<div class="act-form-page py-5" dir="rtl">
-    <div class="container">
+    <div class="container-fluid px-4 px-lg-5">
         <div class="row justify-content-center">
-            <div class="col-lg-6">
+            <div class="col-lg-8 col-xl-7">
 
-                <div class="card shadow act-form-card">
+                <partial name="_Message" />
 
-                    <!-- HEADER -->
-                    <div class="act-form-header">
-                        <div class="act-form-header-icon">
-                            <i class="bi bi-tv"></i>
-                        </div>
-                        <div>
-                            <p class="act-form-header-title">حذف التغطية التلفزيونية</p>
-                            <p class="act-form-header-sub">نشاط إعلامي عبر التلفزيون</p>
-                        </div>
-                    </div>
+                <div class="card af-card shadow-sm mb-5">
+                    <div class="card-body p-4 p-md-5">
 
-                    <div class="card-body">
-
-                        <!-- ALERT -->
-                        <div class="alert-delete">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                            هل أنت متأكد أنك تريد حذف هذه التغطية؟ لا يمكن التراجع عن هذا الإجراء.
-                        </div>
-
-                        <!-- INFOS -->
-                        <p class="act-section-divider">معلومات التغطية</p>
-
-                        <div class="act-info-row">
-                            <div class="act-info-label">القناة التلفزيونية</div>
-                            <div class="act-info-value">@Model.ChaineTV</div>
-                        </div>
-
-                        <div class="act-info-row">
-                            <div class="act-info-label">الموضوع</div>
-                            <div class="act-info-value">@Model.Activite?.Sujet</div>
-                        </div>
-
-                        <div class="act-info-row">
-                            <div class="act-info-label">التاريخ</div>
-                            <div class="act-info-value">
-                                @Model.Activite?.DateActivite.ToString("dd/MM/yyyy")
+                        <div class="alert alert-danger d-flex align-items-center gap-3 mb-4 border-0 shadow-sm" style="border-radius: 12px; background-color: #fff5f5;">
+                            <div class="af-stat-icon bg-danger text-white">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-1 text-danger">هل أنت متأكد من الحذف؟</h5>
+                                <p class="mb-0 text-dark small">لا يمكن التراجع عن هذا الإجراء بعد التنفيذ. سيتم مسح كافة البيانات المتعلقة بهذه التغطية.</p>
                             </div>
                         </div>
 
-                        <!-- ACTIONS -->
+                        <div class="mb-4">
+                            <span class="af-section-title">تفاصيل التغطية المراد حذفها</span>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <label class="text-muted small d-block mb-1">الموضوع</label>
+                                <div class="p-3 bg-light rounded-3 fw-bold">@Model.Activite?.Sujet</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="text-muted small d-block mb-1">القناة التلفزيونية</label>
+                                <div class="p-2 border-bottom">
+                                    <i class="bi bi-tv me-2 text-primary"></i> @Model.ChaineTV
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="text-muted small d-block mb-1">تاريخ البث</label>
+                                <div class="p-2 border-bottom">
+                                    <i class="bi bi-calendar-event me-2 text-primary"></i> @Model.Activite?.DateActivite.ToString("dd/MM/yyyy")
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="text-muted small d-block mb-1">الهيئة</label>
+                                <div class="p-2 border-bottom">
+                                    <i class="bi bi-building me-2 text-primary"></i> @Model.Activite?.AgenceWilaya?.DesignationAr
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-5 opacity-10">
+
                         <form asp-action="DeleteConfirmed" method="post">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@Model.Id" />
 
-                            <div class="d-flex gap-2 mt-3">
-                                <button type="submit" class="btn btn-act-delete">
-                                    <i class="bi bi-trash3 me-1"></i>   حذف
-                                </button>
-
-                                <a asp-action="Index" class="btn btn-outline-secondary btn-act-cancel">
-                                    إلغاء
+                            <div class="d-flex gap-3 justify-content-end">
+                                <a asp-action="Index" class="btn btn-light px-4 fw-bold text-secondary">
+                                    <i class="bi bi-arrow-right-circle me-1"></i> تراجع
                                 </a>
+                                <button type="submit" class="btn btn-danger px-5 fw-bold shadow-sm" id="btnConfirmDelete">
+                                    <i class="bi bi-trash3 me-1"></i> تأكيد الحذف النهائي
+                                </button>
                             </div>
                         </form>
 
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('btnConfirmDelete').addEventListener('click', function () {
+            const btn = this;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> جاري الحذف...`;
+            btn.classList.add('disabled');
+        });
+    </script>
+}

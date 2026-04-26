@@ -21,7 +21,7 @@ namespace Anade.Khadamat.Web.Controllers
             _userService = userService;
         }
 
-        [Authorize(Roles = "CommunicationDG,CommunicationAG")]
+        [Authorize]
         [HttpGet]
         public IActionResult Index()
         {

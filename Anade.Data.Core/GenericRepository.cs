@@ -31,7 +31,7 @@ namespace Anade.Data.Core
         }
         public virtual T GetSingle(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] navigationPropertiesToLoad)
         {
-            return _dbSet.IncludeAll(navigationPropertiesToLoad).SingleOrDefault(predicate);
+         return _dbSet.IncludeAll(navigationPropertiesToLoad).SingleOrDefault(predicate);
         }
         public virtual List<T> GetAll(params Expression<Func<T, object>>[] navigationPropertiesToLoad)
         {

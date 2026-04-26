@@ -2,82 +2,131 @@
 
 @{
     ViewData["Title"] = "إضافة معرض / صالون";
+    ViewData["FullWidth"] = true;
 }
 
-<style>
-    .act-form-page { background: linear-gradient(160deg,#eef2ff 0%,#f8f9fa 60%); min-height: calc(100vh - 64px); }
-    .act-form-card { border-radius: 18px; overflow: hidden; border: none; }
-    .act-form-header { background: linear-gradient(135deg,#4e57d4 0%,#6a76ef 100%); padding: 1.75rem 2rem; display: flex; align-items: center; gap: 1rem; }
-    .act-form-header-icon { width: 50px; height: 50px; background: rgba(255,255,255,.18); border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; color: #fff; flex-shrink: 0; }
-    .act-form-header-title { color: #fff; font-size: 1.1rem; font-weight: 700; margin: 0; line-height: 1.25; }
-    .act-form-header-sub  { color: rgba(255,255,255,.68); font-size: .78rem; margin: .15rem 0 0; }
-    .act-section-divider { font-size: .68rem; font-weight: 700; letter-spacing: .9px; color: #9099b5; padding-bottom: .45rem; border-bottom: 1.5px solid #eaecf4; margin: 1.5rem 0 1.1rem; }
-    .act-form-card .form-control,.act-form-card .form-select { border-color: #dde1ef; border-radius: 10px; font-size: .875rem; padding: .52rem .85rem; background: #fafbff; transition: border-color .2s, box-shadow .2s, background .2s; }
-    .act-form-card .form-control:focus,.act-form-card .form-select:focus { border-color: #7a8aef; background: #fff; box-shadow: 0 0 0 3.5px rgba(78,87,212,.11); }
-    .act-form-card .form-label { font-size: .8rem; font-weight: 600; color: #4e5568; margin-bottom: .32rem; }
-    .btn-act-save { background: linear-gradient(135deg,#4e57d4,#6a76ef); border: none; border-radius: 10px; color: #fff; padding: .58rem 2rem; font-weight: 600; font-size: .875rem; transition: opacity .2s, transform .15s; }
-    .btn-act-save:hover { opacity: .88; transform: translateY(-1px); color: #fff; }
-    .btn-act-cancel { border-radius: 10px; font-size: .875rem; padding: .58rem 1.4rem; color: #6c757d; border-color: #d0d4df; }
-    .btn-act-cancel:hover { background: #f4f5fa; color: #444; border-color: #bcc0ce; }
-</style>
+<div class="af-page" dir="rtl">
 
-<div class="act-form-page py-5" dir="rtl">
-    <div class="container">
+    <!-- HEADER -->
+    <div class="af-page-header px-4 px-lg-5">
+        <div class="af-page-header-left">
+            <div class="af-header-icon">
+                <i class="bi bi-collection"></i>
+            </div>
+            <div>
+                <h1 class="af-header-title">المعارض والصالونات</h1>
+                <p class="af-header-sub">إضافة معرض أو صالون جديد</p>
+
+                <nav class="af-breadcrumb">
+                    <a href="/"><i class="bi bi-house-fill"></i> الرئيسية</a>
+                    <span class="sep"><i class="bi bi-chevron-left"></i></span>
+                    <a asp-controller="ActiviteSalon" asp-action="Index">المعارض</a>
+                    <span class="sep"><i class="bi bi-chevron-left"></i></span>
+                    <span style="color:rgba(255,255,255,.75)">إضافة</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="container-fluid px-4 px-lg-5">
         <div class="row justify-content-center">
-            <div class="col-lg-6 col-md-9">
+            <div class="col-lg-8 col-xl-7">
+
                 <partial name="_Message" />
-                <div class="card shadow act-form-card">
-                    <div class="act-form-header">
-                        <div class="act-form-header-icon"><i class="bi bi-collection"></i></div>
-                        <div>
-                            <p class="act-form-header-title">إضافة معرض / صالون</p>
-                            <p class="act-form-header-sub">معارض وصالونات</p>
+
+                <div class="card af-card shadow-sm mb-5">
+                    <div class="card-body p-4 p-md-5">
+
+                        <!-- TITLE -->
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <div class="af-stat-icon shadow-sm" style="background: var(--light);">
+                                <i class="bi bi-plus-circle-fill text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="fw-bold mb-0">معلومات المعرض</h4>
+                                <p class="text-muted small mb-0">يرجى إدخال معلومات المعرض بدقة</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body p-4">
+
                         <form asp-action="Create" method="post">
                             @Html.AntiForgeryToken()
-                            <p class="act-section-divider">معلومات المعرض</p>
+
+                            <!-- SECTION -->
+                            <div class="mb-4">
+                                <span class="af-section-title">البيانات الأساسية</span>
+                            </div>
+
+                            <!-- SUJET -->
                             <div class="mb-3">
-                                <label asp-for="Sujet" class="form-label">موضوع المعرض</label>
-                                <input asp-for="Sujet" class="form-control" placeholder="  المعرض / الصالون" />
+                                <label asp-for="Sujet" class="form-label fw-bold small">موضوع المعرض</label>
+                                <input asp-for="Sujet" class="form-control af-form-input" placeholder="عنوان المعرض..." />
                                 <span asp-validation-for="Sujet" class="text-danger small"></span>
                             </div>
+
+                            <!-- LIEU -->
                             <div class="mb-3">
-                                <label asp-for="Lieu" class="form-label">مكان المعرض</label>
-                                <input asp-for="Lieu" class="form-control" placeholder="مكان إقامة المعرض" />
+                                <label asp-for="Lieu" class="form-label fw-bold small">مكان المعرض</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-start-0">
+                                        <i class="bi bi-geo-alt"></i>
+                                    </span>
+                                    <input asp-for="Lieu" class="form-control af-form-input" placeholder="مكان إقامة المعرض" />
+                                </div>
                                 <span asp-validation-for="Lieu" class="text-danger small"></span>
                             </div>
-                            <div class="row g-3 mb-3">
+
+                            <!-- DATE + VISITEURS -->
+                            <div class="row g-3 mb-4">
                                 <div class="col-md-6">
-                                    <label asp-for="DateActivite" class="form-label">تاريخ  </label>
-                                    <input asp-for="DateActivite" type="date" class="form-control" />
+                                    <label asp-for="DateActivite" class="form-label fw-bold small">تاريخ المعرض</label>
+                                    <input asp-for="DateActivite" type="date" class="form-control af-form-input" />
                                     <span asp-validation-for="DateActivite" class="text-danger small"></span>
                                 </div>
+
                                 <div class="col-md-6">
-                                    <label asp-for="NombreVisiteurs" class="form-label">عدد الزوار</label>
-                                    <input asp-for="NombreVisiteurs" type="number" class="form-control" placeholder="0" />
+                                    <label asp-for="NombreVisiteurs" class="form-label fw-bold small">عدد الزوار</label>
+                                    <input asp-for="NombreVisiteurs" type="number" class="form-control af-form-input" placeholder="0" />
                                     <span asp-validation-for="NombreVisiteurs" class="text-danger small"></span>
                                 </div>
                             </div>
-                            <p class="act-section-divider">المشاركون</p>
+
+                            <!-- SECTION -->
+                            <div class="mb-4 mt-5">
+                                <span class="af-section-title">التنظيم والمشاركة</span>
+                            </div>
+
+                            <!-- ORGANISATEURS -->
                             <div class="mb-3">
-                                <label asp-for="Organisateurs" class="form-label">المنظمون</label>
-                                <input asp-for="Organisateurs" class="form-control" placeholder="جهات التنظيم" />
+                                <label asp-for="Organisateurs" class="form-label fw-bold small">المنظمين</label>
+                                <input asp-for="Organisateurs" class="form-control af-form-input" placeholder="جهات التنظيم..." />
                                 <span asp-validation-for="Organisateurs" class="text-danger small"></span>
                             </div>
-                            <div class="mb-4">
-                                <label asp-for="Participants" class="form-label">المشاركون</label>
-                                <input asp-for="Participants" class="form-control" placeholder="  المشاركون" />
+
+                            <!-- PARTICIPANTS -->
+                            <div class="mb-5">
+                                <label asp-for="Participants" class="form-label fw-bold small">المشاركين</label>
+                                <textarea asp-for="Participants" class="form-control af-form-input" rows="3" placeholder="قائمة المشاركين..."></textarea>
                                 <span asp-validation-for="Participants" class="text-danger small"></span>
                             </div>
-                            <div class="d-flex gap-2 pt-1">
-                                <button type="submit" class="btn btn-act-save">حفظ</button>
-                                <a asp-action="Index" class="btn btn-outline-secondary btn-act-cancel">إلغاء</a>
+
+                            <hr class="opacity-10 mb-4">
+
+                            <!-- ACTIONS -->
+                            <div class="d-flex gap-3 justify-content-end">
+                                <a asp-action="Index" class="btn btn-light px-4 fw-bold">
+                                    <i class="bi bi-x-circle me-1"></i> إلغاء
+                                </a>
+
+                                <button type="submit" class="btn btn-af-add px-5">
+                                    <i class="bi bi-check-lg me-1"></i> حفظ المعرض
+                                </button>
                             </div>
                         </form>
+
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -85,4 +134,24 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', function () {
+
+                if ($(form).valid()) {
+                    const btn = form.querySelector('button[type="submit"]');
+
+                    btn.disabled = true;
+
+                    btn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm"></span>
+                        جاري الحفظ...
+                    `;
+                }
+            });
+        });
+    </script>
 }
