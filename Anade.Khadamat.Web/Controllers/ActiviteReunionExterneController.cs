@@ -135,7 +135,7 @@ namespace Anade.Khadamat.Web.Controllers
         // POST: edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, int activiteId, ActiviteReunionExterneVM model)
+        public IActionResult Edit(int activiteId, ActiviteReunionExterneVM model)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -148,13 +148,12 @@ namespace Anade.Khadamat.Web.Controllers
             activite.Lieu = model.Lieu;
             activite.Organisateurs = model.Organisateurs;
             activite.Participants = model.Participants;
- 
             activite.DateActivite = model.DateActivite;
 
             var result = _activiteBusinessService.Update(activite);
             if (!result.Succeeded)
             {
-                TempData["Message"] = result.ToBootstrapAlerts();
+                ViewData["Message"] = result.ToBootstrapAlerts();
                 return View(model);
             }
             TempData["Message"] = result.ToBootstrapAlerts();

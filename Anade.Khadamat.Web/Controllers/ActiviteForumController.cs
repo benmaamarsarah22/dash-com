@@ -151,10 +151,10 @@ namespace Anade.Khadamat.Web.Controllers
             var result = _activiteBusinessService.Update(activite);
             if (!result.Succeeded)
             {
-                TempData["Message"] = result.ToBootstrapAlerts();
+                 ViewData["Message"] = result.ToBootstrapAlerts();
                 return View(model);
             }
-            ViewData["Message"] = result.ToBootstrapAlerts();
+            TempData["Message"] = result.ToBootstrapAlerts();
             return RedirectToAction(nameof(Index));
         }
 
@@ -182,7 +182,7 @@ namespace Anade.Khadamat.Web.Controllers
             var resultForum = _ForumBusinessService.Delete(Forum);
             if (!resultForum.Succeeded)
             {
-                TempData["Error"] = resultForum.Messages.First().Message;
+                TempData["Message"] = resultForum.ToBootstrapAlerts();
                 return RedirectToAction(nameof(Index));
             }
             // Supprimer l'activité liée si nécessaire
@@ -191,9 +191,10 @@ namespace Anade.Khadamat.Web.Controllers
                 var resultActivite = _activiteBusinessService.Delete(Forum.Activite);
                 if (!resultActivite.Succeeded)
                 {
-                    TempData["Error"] = resultActivite.Messages.First().Message;
+                    TempData["Message"] = resultActivite.ToBootstrapAlerts();
                     return RedirectToAction(nameof(Index));
                 }
+                TempData["Message"] = resultActivite.ToBootstrapAlerts();
             }
 
             return RedirectToAction(nameof(Index));
