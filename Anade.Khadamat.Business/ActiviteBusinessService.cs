@@ -3,6 +3,7 @@ using Anade.Data.Abstractions;
 using Anade.Khadamat.Business;
 using Anade.Khadamat.Domain.Entity;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 
 public class ActiviteBusinessService : GenericBusinessService<Activite, int>
@@ -27,6 +28,18 @@ public class ActiviteBusinessService : GenericBusinessService<Activite, int>
     protected override void OnAdding(Activite entity)
     {
         _moisService.AssertMoisOuvert(entity.DateActivite.Year, entity.DateActivite.Month);
+        //  Vérification des doublon 
+        bool doublon = this.GetAllFiltered(x =>
+                x.StructureId == entity.StructureId &&
+                x.DateActivite.Date == entity.DateActivite.Date &&
+                x.Sujet == entity.Sujet &&
+                x.TypeActiviteId == entity.TypeActiviteId)
+            .Any();
+
+        if (doublon)
+            throw new BusinessException(
+                "هذه النشاط موجودة مسبقاً");
+
         base.OnAdding(entity);
     }
 
